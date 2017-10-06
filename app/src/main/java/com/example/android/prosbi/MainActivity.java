@@ -2,6 +2,7 @@ package com.example.android.prosbi;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -21,8 +22,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     createListView();
-  }
+//    String request;
+//    request = getIntent().getExtras().getString("request");
+//    ListView listView = (ListView)findViewById(R.id.listView);
+//    listView.setText(request);
 
+  }
   public void createListView() {
     // получаем экземпляр элемента ListView
     final ListView listView = (ListView) findViewById(R.id.listView);
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void Edit(View view) {
-    final EditText editText = (EditText) findViewById(R.id.editText);
-    editText.setVisibility(View.VISIBLE);
+    Intent intent=new Intent(this,СreateRequestActivity.class);
+    startActivity(intent);
   }
 }
