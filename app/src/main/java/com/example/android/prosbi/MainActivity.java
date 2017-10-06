@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     listView.setOnItemLongClickListener(
         new AdapterView.OnItemLongClickListener() {
 
-          public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long itemId) {
+          public boolean onItemLongClick(
+              AdapterView<?> adapterView, View view, int position, long itemId) {
             confirmAndDeleteItem(adapterView.getItemAtPosition(position).toString());
             return true;
           }
