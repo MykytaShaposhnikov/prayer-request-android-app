@@ -4,6 +4,6 @@
     <dimen name="margin_activity_boundary">8dp</dimen>
     <dimen name="margin_default">4dp</dimen>
     <dimen name="margin_large">10dp</dimen>
-    <dimen name="width_date">100dp</dimen>
+    <dimen name="width_date">180dp</dimen>
 
 </resources>

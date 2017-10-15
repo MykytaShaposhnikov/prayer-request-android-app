@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,10 +26,16 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     createListView();
-    findViewById(R.id.startNewActivity).setOnClickListener(new View.OnClickListener() {
+    findViewById(R.id.button_new_request).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        startPrayerRequestActivity("Nikita", "Today", "Football");
+        startPrayerRequestActivity(
+            "",
+            DateUtils.formatDateTime(
+                MainActivity.this,
+                System.currentTimeMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR),
+            "");
       }
     });
   }
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createListView() {
     // получаем экземпляр элемента ListView
-    final ListView listView = (ListView) findViewById(R.id.listView);
+    final ListView listView = (ListView) findViewById(R.id.list_view_requests);
     // Создаём адаптер ArrayAdapter, чтобы привязать массив к ListView
     adapter = new ArrayAdapter<>(this,
         android.R.layout.simple_list_item_1, names);
@@ -65,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Привяжем массив через адаптер к ListView
     listView.setAdapter(adapter);
-    final EditText editText = (EditText) findViewById(R.id.editText);
-    editText.setVisibility(View.INVISIBLE);
+    final EditText editText = (EditText) findViewById(R.id.edit_text_search);
+    editText.setVisibility(View.GONE);
 
     // Прослушиваем нажатия клавиш
     editText.setOnKeyListener(new View.OnKeyListener() {
