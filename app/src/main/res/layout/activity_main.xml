@@ -9,7 +9,6 @@
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_enter_request"
         android:maxLines="10">
 
         <requestFocus/>
@@ -25,13 +24,12 @@
         android:choiceMode="multipleChoice"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/startNewActivity"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/round_button"
         android:gravity="center_vertical|center_horizontal"
-        android:onClick="Edit"
         android:text="+"
         android:textColor="#fff"/>
 

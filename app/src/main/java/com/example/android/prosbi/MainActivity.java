@@ -15,6 +15,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+  private static final int ACTIVITY_PRAYER_REQUEST = 1;
+  // Создаём пустой массив для хранения имен
+  final ArrayList<String> names = new ArrayList<>();
   private ArrayAdapter<String> adapter;
 
   @Override
@@ -22,24 +25,36 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     createListView();
-//    String request;
-//    request = getIntent().getExtras().getString("request");
-//    ListView listView = (ListView)findViewById(R.id.listView);
-//    listView.setText(request);
-
+    findViewById(R.id.startNewActivity).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startPrayerRequestActivity("Nikita", "Today", "Football");
+      }
+    });
   }
-  public void createListView() {
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+      case ACTIVITY_PRAYER_REQUEST:
+        String from = data.getStringExtra(PrayerRequestActivity.KEY_REQUEST_FROM);
+        String when = data.getStringExtra(PrayerRequestActivity.KEY_REQUEST_WHEN);
+        String request = data.getStringExtra(PrayerRequestActivity.KEY_REQUEST);
+        names.add(0, request);
+        adapter.notifyDataSetChanged();
+        break;
+    }
+  }
+
+  private void createListView() {
     // получаем экземпляр элемента ListView
     final ListView listView = (ListView) findViewById(R.id.listView);
-    // Создаём пустой массив для хранения имен
-    final ArrayList<String> names = new ArrayList<>();
     // Создаём адаптер ArrayAdapter, чтобы привязать массив к ListView
     adapter = new ArrayAdapter<>(this,
         android.R.layout.simple_list_item_1, names);
 
     listView.setOnItemLongClickListener(
         new AdapterView.OnItemLongClickListener() {
-
           public boolean onItemLongClick(
               AdapterView<?> adapterView, View view, int position, long itemId) {
             confirmAndDeleteItem(adapterView.getItemAtPosition(position).toString());
@@ -68,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  public void confirmAndDeleteItem(final String requestToDelete) {
+  private void confirmAndDeleteItem(final String requestToDelete) {
     new AlertDialog.Builder(MainActivity.this)
         .setMessage(getString(R.string.message_alert, adapter.getCount(), requestToDelete))
         .setNegativeButton(getString(R.string.button_no), null)
@@ -83,8 +98,11 @@ public class MainActivity extends AppCompatActivity {
         .show();
   }
 
-  public void Edit(View view) {
-    Intent intent=new Intent(this,СreateRequestActivity.class);
-    startActivity(intent);
+  private void startPrayerRequestActivity(String from, String when, String request) {
+    Intent intent = new Intent(this, PrayerRequestActivity.class);
+    intent.putExtra(PrayerRequestActivity.KEY_REQUEST_FROM, from);
+    intent.putExtra(PrayerRequestActivity.KEY_REQUEST_WHEN, when);
+    intent.putExtra(PrayerRequestActivity.KEY_REQUEST, request);
+    startActivityForResult(intent, ACTIVITY_PRAYER_REQUEST);
   }
 }

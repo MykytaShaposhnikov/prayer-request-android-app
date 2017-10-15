@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".СreateRequestActivity"/>
+        <activity android:name=".PrayerRequestActivity"/>
 
     </application>
 
