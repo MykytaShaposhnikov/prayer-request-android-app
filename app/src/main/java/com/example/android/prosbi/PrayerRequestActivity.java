@@ -3,35 +3,55 @@ package com.example.android.prosbi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class PrayerRequestActivity extends AppCompatActivity {
-  private EditText editTextFrom;
-  private EditText editTextWhen;
-  private EditText editTextRequest;
+  private PrayerRequest prayerRequest;
+  private EditText editTextRequester;
+  private Button buttonRequestDate;
+  private EditText editTextRequestSummary;
+  private EditText editTextRequestDetails;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_prayer_request);
-    configureFrom();
-    configureWhen();
-    configureRequest();
+    prayerRequest = (PrayerRequest)
+        getIntent().getSerializableExtra(MainActivity.KEY_PRAYER_REQUEST);
+    configureRequester();
+    configureDate();
+    configureRequestSummary();
+    configureRequestDetails();
   }
 
-  private void configureFrom() {
-    editTextFrom = (EditText) findViewById(R.id.edit_text_from);
-    editTextFrom.setText(getIntent().getStringExtra(MainActivity.KEY_REQUEST_FROM));
+  private void configureRequester() {
+    editTextRequester = (EditText) findViewById(R.id.edit_text_requester);
+    editTextRequester.setText(prayerRequest.getRequester());
   }
 
-  private void configureWhen() {
-    editTextWhen = (EditText) findViewById(R.id.edit_text_when);
-    editTextWhen.setText(getIntent().getStringExtra(MainActivity.KEY_REQUEST_WHEN));
+  private void configureDate() {
+    buttonRequestDate = (Button) findViewById(R.id.button_new_request);
+    buttonRequestDate.setText(MainActivity.requestDateString(this, prayerRequest.getRequestDate()));
+    buttonRequestDate.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            // TODO call Android DatePicker
+          }
+        }
+    );
   }
 
-  private void configureRequest() {
-    editTextRequest = (EditText) findViewById(R.id.edit_text_request);
-    editTextRequest.setText(getIntent().getStringExtra(MainActivity.KEY_REQUEST));
+  private void configureRequestSummary() {
+    editTextRequestSummary = (EditText) findViewById(R.id.edit_text_request_summary);
+    editTextRequestSummary.setText(prayerRequest.getRequestSummary());
+  }
+
+  private void configureRequestDetails() {
+    editTextRequestDetails = (EditText) findViewById(R.id.edit_text_request_details);
+    editTextRequestDetails.setText(prayerRequest.getRequestDetails());
   }
 
   public void onBackPressed() {
@@ -41,9 +61,10 @@ public class PrayerRequestActivity extends AppCompatActivity {
 
   private void saveToResult() {
     Intent result = new Intent();
-    result.putExtra(MainActivity.KEY_REQUEST_FROM, editTextFrom.getText().toString());
-    result.putExtra(MainActivity.KEY_REQUEST_WHEN, editTextWhen.getText().toString());
-    result.putExtra(MainActivity.KEY_REQUEST, editTextRequest.getText().toString());
+    prayerRequest.setRequester(editTextRequester.getText().toString());
+    prayerRequest.setRequestSummary(editTextRequestSummary.getText().toString());
+    prayerRequest.setRequestDetails(editTextRequestDetails.getText().toString());
+    result.putExtra(MainActivity.KEY_PRAYER_REQUEST, prayerRequest);
     setResult(RESULT_OK, result);
   }
 }
