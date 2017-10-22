@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
   public static final String KEY_REQUEST_SUMMARY = "summary";
   private List<Map<String, Object>> requests;
   private SimpleAdapter listAdapter;
+  private int indexOrPrayerRequestBeingEdited;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     loadPrayerRequestData();
     createListView();
-    findViewById(R.id.button_new_request).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        startPrayerRequestActivity(new PrayerRequest());
-      }
-    });
+    findViewById(R.id.button_new_request).setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            indexOrPrayerRequestBeingEdited = -1;
+            startPrayerRequestActivity(new PrayerRequest());
+          }
+        });
   }
 
   @Override
@@ -47,9 +50,14 @@ public class MainActivity extends AppCompatActivity {
     switch (requestCode) {
       case ACTIVITY_PRAYER_REQUEST:
         PrayerRequest prayerRequest = (PrayerRequest) data.getSerializableExtra(KEY_PRAYER_REQUEST);
-        Map<String, Object> itemMap = new HashMap<>();
-        putPrayerRequestToItemMap(prayerRequest, itemMap);
-        requests.add(itemMap);
+        if (indexOrPrayerRequestBeingEdited >= 0) {
+          Map<String, Object> itemMap = requests.get(indexOrPrayerRequestBeingEdited);
+          putPrayerRequestToItemMap(prayerRequest, itemMap);
+        } else {
+          Map<String, Object> itemMap = new HashMap<>();
+          putPrayerRequestToItemMap(prayerRequest, itemMap);
+          requests.add(itemMap);
+        }
         createListView();
         listAdapter.notifyDataSetChanged();
         break;
@@ -73,6 +81,16 @@ public class MainActivity extends AppCompatActivity {
             R.id.text_view_request_summary
         });
     listView.setAdapter(listAdapter);
+    listView.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            indexOrPrayerRequestBeingEdited = position;
+            startPrayerRequestActivity(
+                (PrayerRequest) requests.get(position).get(KEY_PRAYER_REQUEST));
+          }
+        }
+    );
     listView.setOnItemLongClickListener(
         new AdapterView.OnItemLongClickListener() {
           public boolean onItemLongClick(
