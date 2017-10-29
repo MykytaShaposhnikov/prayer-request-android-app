@@ -5,17 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="10"
-        android:visibility="gone">
-
-        <requestFocus/>
-
-    </EditText>
-
     <Button
         android:id="@+id/button_alphabetizing"
         android:layout_width="wrap_content"

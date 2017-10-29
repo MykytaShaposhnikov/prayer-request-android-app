@@ -7,13 +7,15 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -25,11 +27,13 @@ public class MainActivity extends AppCompatActivity {
   private static final int ACTIVITY_PRAYER_REQUEST = 1;
   public static final String KEY_PRAYER_REQUEST = "prayer_request";
   public static final String KEY_REQUESTER = "requester";
+  public static final String KEY_REQUEST_DATE_STRING = "date_string";
   public static final String KEY_REQUEST_DATE = "date";
   public static final String KEY_REQUEST_SUMMARY = "summary";
   private List<Map<String, Object>> requests;
   private SimpleAdapter listAdapter;
   private int indexOrPrayerRequestBeingEdited;
+  private SortingType sortingType = SortingType.BY_REQUESTER;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,25 @@ public class MainActivity extends AppCompatActivity {
             startPrayerRequestActivity(new PrayerRequest());
           }
         });
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.main, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.item_sorting:
+        // TODO let the user select a sorting type via the dialog
+        sortingType = SortingType.BY_REQUEST_DATE_DESCENDING;
+        sortPrayerRequests();
+        listAdapter.notifyDataSetChanged();
+        break;
+    }
+    return true;
   }
 
   @Override
@@ -74,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         R.layout.list_item_prayer_request,
         new String[]{
             KEY_REQUESTER,
-            KEY_REQUEST_DATE,
+            KEY_REQUEST_DATE_STRING,
             KEY_REQUEST_SUMMARY
         },
         new int[]{
@@ -104,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
     );
   }
 
-  private void configureSearchEditText() {
-    final EditText editText = (EditText) findViewById(R.id.edit_text_search);
-    editText.setVisibility(View.GONE);
-  }
-
   private void confirmAndDeleteItem(final String requestToDelete, final int position) {
     new AlertDialog.Builder(MainActivity.this)
         .setMessage(getString(R.string.message_alert, listAdapter.getCount(), requestToDelete))
@@ -133,20 +151,23 @@ public class MainActivity extends AppCompatActivity {
   private void loadPrayerRequestData() {
     requests = new ArrayList<>();
 
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_YEAR, 2);
     PrayerRequest prayerRequest =
         new PrayerRequest(
             "Nikita S.",
-            new Date(),
+            calendar.getTime(),
             "Sample request1",
             "This is a sample resuest\nwith several line feeds\nand with some details.");
     Map<String, Object> itemMap = new HashMap<>();
     putPrayerRequestToItemMap(prayerRequest, itemMap);
     requests.add(itemMap);
 
+    calendar.add(Calendar.DAY_OF_YEAR, -1);
     PrayerRequest prayerRequest2 =
         new PrayerRequest(
             "Denis D.",
-            new Date(),
+            calendar.getTime(),
             "Sample request2",
             "This is a sample resuest\nwith several line feeds\nand with some details."
         );
@@ -154,24 +175,85 @@ public class MainActivity extends AppCompatActivity {
     putPrayerRequestToItemMap(prayerRequest2, itemMap);
     requests.add(itemMap);
 
+    calendar.add(Calendar.DAY_OF_YEAR, +10);
     PrayerRequest prayerRequest3 =
         new PrayerRequest(
-            "Denis D.",
+            "Andrey D.",
+            calendar.getTime(),
+            "Sample request2",
+            "This is a sample resuest\nwith several line feeds\nand with some details."
+        );
+    itemMap = new HashMap<>();
+    putPrayerRequestToItemMap(prayerRequest3, itemMap);
+    requests.add(itemMap);
+    PrayerRequest prayerRequest4 =
+        new PrayerRequest(
+            "Boris K.",
             new Date(),
             "Sample request3",
             "If you see this then your first SimpleAdaper has started to work"
         );
     itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest3, itemMap);
+    putPrayerRequestToItemMap(prayerRequest4, itemMap);
     requests.add(itemMap);
-   // alphabetizing(requests);
+
+    calendar.add(Calendar.DAY_OF_YEAR, -4);
+    PrayerRequest prayerRequest5 =
+        new PrayerRequest(
+            "Никита Ш.",
+            calendar.getTime(),
+            "Sample request2",
+            "This is a sample resuest\nwith several line feeds\nand with some details."
+        );
+    itemMap = new HashMap<>();
+    putPrayerRequestToItemMap(prayerRequest5, itemMap);
+    requests.add(itemMap);
+    sortPrayerRequests();
+  }
+
+  private void sortPrayerRequests() {
+    Comparator<Map<String, Object>> comparator = null;
+
+    switch (sortingType) {
+      case BY_REQUESTER:
+        comparator = new Comparator<Map<String, Object>>() {
+          public int compare(Map<String, Object> left, Map<String, Object> right) {
+            return ((String) left.get(KEY_REQUESTER)).compareToIgnoreCase(
+                ((String) right.get(KEY_REQUESTER)));
+          }
+        };
+        break;
+
+      case BY_REQUEST_DATE_ASCENDING:
+        comparator = new Comparator<Map<String, Object>>() {
+          public int compare(Map<String, Object> left, Map<String, Object> right) {
+            return ((Date) left.get(KEY_REQUEST_DATE)).compareTo(
+                ((Date) right.get(KEY_REQUEST_DATE)));
+          }
+        };
+        break;
+
+      case BY_REQUEST_DATE_DESCENDING:
+        comparator = new Comparator<Map<String, Object>>() {
+          public int compare(Map<String, Object> left, Map<String, Object> right) {
+            return -((Date) left.get(KEY_REQUEST_DATE)).compareTo(
+                ((Date) right.get(KEY_REQUEST_DATE)));
+          }
+        };
+        break;
+
+    }
+    if (comparator != null) {
+      Collections.sort(requests, comparator);
+    }
   }
 
   private void putPrayerRequestToItemMap(
       final PrayerRequest prayerRequest, Map<String, Object> itemMap) {
     itemMap.put(KEY_PRAYER_REQUEST, prayerRequest);
     itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
-    itemMap.put(KEY_REQUEST_DATE, requestDateString(this, prayerRequest.getRequestDate()));
+    itemMap.put(KEY_REQUEST_DATE, prayerRequest.getRequestDate());
+    itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(this, prayerRequest.getRequestDate()));
     itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
   }
 
@@ -179,19 +261,10 @@ public class MainActivity extends AppCompatActivity {
     return DateUtils.formatDateTime(context, requestDate.getTime(), DateUtils.FORMAT_SHOW_DATE);
   }
 
-  private void alphabetizing(final List<Map<String, String>> requests) {
-    findViewById(R.id.button_alphabetizing).setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-           final  Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
-              public int compare(Map<String, String> m1, Map<String, String> m2) {
-                return m1.get("name").compareTo(m2.get("name"));
-              }
-            };
-            Collections.sort(requests, mapComparator);
-          }
-        });
-  }
 
+  private enum SortingType {
+    BY_REQUESTER,
+    BY_REQUEST_DATE_ASCENDING,
+    BY_REQUEST_DATE_DESCENDING
+  }
 }
