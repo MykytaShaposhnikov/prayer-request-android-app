@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -162,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
     itemMap = new HashMap<>();
     putPrayerRequestToItemMap(prayerRequest3, itemMap);
     requests.add(itemMap);
+   // alphabetizing(requests);
   }
 
   private void putPrayerRequestToItemMap(
@@ -175,4 +178,20 @@ public class MainActivity extends AppCompatActivity {
   public static String requestDateString(Context context, Date requestDate) {
     return DateUtils.formatDateTime(context, requestDate.getTime(), DateUtils.FORMAT_SHOW_DATE);
   }
+
+  private void alphabetizing(final List<Map<String, String>> requests) {
+    findViewById(R.id.button_alphabetizing).setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+           final  Comparator<Map<String, String>> mapComparator = new Comparator<Map<String, String>>() {
+              public int compare(Map<String, String> m1, Map<String, String> m2) {
+                return m1.get("name").compareTo(m2.get("name"));
+              }
+            };
+            Collections.sort(requests, mapComparator);
+          }
+        });
+  }
+
 }
