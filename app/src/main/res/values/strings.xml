@@ -7,10 +7,16 @@
     </string>
     <string name="button_no">No</string>
     <string name="button_yes">Yes</string>
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancel</string>
     <string name="text_requester">Requester:</string>
     <string name="text_request_summary">Request summary:</string>
     <string name="text_date">Date:</string>
     <string name="button_back">Prayer request:</string>
     <string name="item_sorting">Sorting</string>
+    <string name="title_sort_by">Sort by</string>
+    <string name="radio_button_sorting_by_requester">requester</string>
+    <string name="radio_button_sorting_by_date_ascending">date ascending</string>
+    <string name="radio_button_sorting_by_date_descending">date descending</string>
 
 </resources>

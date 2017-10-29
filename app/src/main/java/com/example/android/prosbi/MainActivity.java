@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
@@ -61,10 +62,45 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.item_sorting:
-        // TODO let the user select a sorting type via the dialog
-        sortingType = SortingType.BY_REQUEST_DATE_DESCENDING;
-        sortPrayerRequests();
-        listAdapter.notifyDataSetChanged();
+        final View dialogContent = View.inflate(this, R.layout.sorting_layout, null);
+        RadioButton selectedRadioButton = null;
+        switch (sortingType) {
+          case BY_REQUESTER:
+            selectedRadioButton =
+                dialogContent.findViewById(R.id.radio_button_sorting_by_requester);
+            break;
+          case BY_REQUEST_DATE_ASCENDING:
+            selectedRadioButton =
+                dialogContent.findViewById(R.id.radio_button_sorting_by_date_ascending);
+            break;
+          case BY_REQUEST_DATE_DESCENDING:
+            selectedRadioButton =
+                dialogContent.findViewById(R.id.radio_button_sorting_by_date_descending);
+            break;
+        }
+        selectedRadioButton.setChecked(true);
+        AlertDialog dialog =
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.title_sort_by)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                    if (((RadioButton) dialogContent.
+                        findViewById(R.id.radio_button_sorting_by_requester)).isChecked()) {
+                      sortingType = SortingType.BY_REQUESTER;
+                    } else if (((RadioButton) dialogContent.
+                        findViewById(R.id.radio_button_sorting_by_date_descending)).isChecked()) {
+                      sortingType = SortingType.BY_REQUEST_DATE_DESCENDING;
+                    } else if (((RadioButton) dialogContent.
+                        findViewById(R.id.radio_button_sorting_by_date_ascending)).isChecked()) {
+                      sortingType = SortingType.BY_REQUEST_DATE_ASCENDING;
+                    }
+                    sortPrayerRequests();
+                    listAdapter.notifyDataSetChanged();
+                  }
+                })
+                .setNegativeButton(R.string.button_cancel, null).create();
+        dialog.setView(dialogContent);
+        dialog.show();
         break;
     }
     return true;

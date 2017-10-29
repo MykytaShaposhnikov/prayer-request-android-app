@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_alphabetizing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="alphabetizing"/>
-
     <ListView
         android:id="@+id/list_view_requests"
         android:layout_width="match_parent"
