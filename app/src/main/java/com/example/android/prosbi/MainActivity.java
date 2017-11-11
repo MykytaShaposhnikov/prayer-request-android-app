@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog =
             new AlertDialog.Builder(this)
                 .setTitle(R.string.title_sort_by)
+                .setIcon(android.R.drawable.ic_menu_sort_by_size)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int id) {
                     if (((RadioButton) dialogContent.
@@ -103,8 +104,23 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         break;
     }
+    switch (item.getItemId()) {
+      case R.id.item_prayer_mode:
+        AlertDialog dialogPrayerMode =
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.title_prayer_mode)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                    startPrayerModeActivity(new PrayerRequest());
+                  }
+                })
+                .setNegativeButton(R.string.button_cancel, null).create();
+        dialogPrayerMode.show();
+        break;
+    }
     return true;
   }
+
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,6 +198,14 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, PrayerRequestActivity.class);
     intent.putExtra(KEY_PRAYER_REQUEST, prayerRequest);
     startActivityForResult(intent, ACTIVITY_PRAYER_REQUEST);
+  }
+
+  private void startPrayerModeActivity(PrayerRequest prayerRequest) {
+    Intent intent = new Intent(MainActivity.this, PrayerModeActivity.class);
+    intent.putExtra(KEY_REQUESTER,prayerRequest.getRequester());
+    intent.putExtra(KEY_REQUEST_SUMMARY,prayerRequest.getRequestSummary());
+    intent.putExtra(KEY_PRAYER_REQUEST, prayerRequest);
+    startActivity(intent);
   }
 
   private void loadPrayerRequestData() {
