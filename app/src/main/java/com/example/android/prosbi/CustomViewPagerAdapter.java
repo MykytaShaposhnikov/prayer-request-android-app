@@ -6,15 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.Map;
-
-import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
   public class CustomViewPagerAdapter extends PagerAdapter {
-    private List<Map<String, Object>> requests;
+    private List<PrayerRequest> requests;
     private Context context;
 
-    public CustomViewPagerAdapter(Context context, List<Map<String, Object>> requests) {
+    public CustomViewPagerAdapter(Context context, List<PrayerRequest> requests) {
       this.requests = requests;
       this.context = context;
     }
@@ -31,8 +28,7 @@ import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
   @Override
   public Object instantiateItem(ViewGroup container, int position) {
-    Map<String, Object> map = requests.get(position);
-    PrayerRequest request = (PrayerRequest) map.get(KEY_PRAYER_REQUEST);
+    PrayerRequest request = requests.get(position);
     PrayerRequestView view = new PrayerRequestView(context, request.getRequester(),
         request.getRequestSummary(), request.getRequestDetails());
     container.addView(view);
