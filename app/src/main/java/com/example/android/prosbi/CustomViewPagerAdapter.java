@@ -10,19 +10,19 @@ import java.util.Map;
 
 import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
-public class CustomViewPagerAdapter extends PagerAdapter {
-  private List<Map<String, Object>> requests;
-  private Context context;
+  public class CustomViewPagerAdapter extends PagerAdapter {
+    private List<Map<String, Object>> requests;
+    private Context context;
 
-  public CustomViewPagerAdapter(Context context, List<Map<String, Object>> requests) {
-    this.requests = requests;
-    this.context = context;
-  }
+    public CustomViewPagerAdapter(Context context, List<Map<String, Object>> requests) {
+      this.requests = requests;
+      this.context = context;
+    }
 
-  @Override
-  public int getCount() {
-    return requests.size();
-  }
+    @Override
+    public int getCount() {
+      return requests.size();
+    }
 
   @Override
   public boolean isViewFromObject(View view, Object object) {

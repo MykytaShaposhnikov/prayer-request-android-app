@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,13 +14,15 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,15 +32,19 @@ public class MainActivity extends AppCompatActivity {
   public static final String KEY_REQUEST_DATE_STRING = "date_string";
   public static final String KEY_REQUEST_DATE = "date";
   public static final String KEY_REQUEST_SUMMARY = "summary";
-  private List<Map<String, Object>> requests;
+  private static final String KEY_REQUEST_DETAILS = "details";
+  //  private List<Map<String, Object>> requests;
+  private List<PrayerRequest> requestList;
   private SimpleAdapter listAdapter;
   private int indexOrPrayerRequestBeingEdited;
   private SortingType sortingType = SortingType.BY_REQUESTER;
+  private Settings settings;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    settings = new Settings(this);
     loadPrayerRequestData();
     createListView();
     findViewById(R.id.button_new_request).setOnClickListener(
@@ -47,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onClick(View view) {
             indexOrPrayerRequestBeingEdited = -1;
-            startPrayerRequestActivity(new PrayerRequest());
+
+            startPrayerRequestActivity(new PrayerRequest("", new Date(), "", ""));
           }
         });
   }
@@ -126,17 +132,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
       case ACTIVITY_PRAYER_REQUEST:
-        PrayerRequest prayerRequest = (PrayerRequest) data.getSerializableExtra(KEY_PRAYER_REQUEST);
-        if (indexOrPrayerRequestBeingEdited >= 0) {
-          Map<String, Object> itemMap = requests.get(indexOrPrayerRequestBeingEdited);
-          putPrayerRequestToItemMap(prayerRequest, itemMap);
-        } else {
-          Map<String, Object> itemMap = new HashMap<>();
-          putPrayerRequestToItemMap(prayerRequest, itemMap);
-          requests.add(itemMap);
-        }
+        PrayerRequest prayerRequest = new Gson().fromJson(data.getStringExtra(KEY_PRAYER_REQUEST),
+            PrayerRequest.class);
+        settings.addPrayerRequest(prayerRequest);
+        loadPrayerRequestData();
         createListView();
-        listAdapter.notifyDataSetChanged();
         break;
     }
   }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     final ListView listView = (ListView) findViewById(R.id.list_view_requests);
     listAdapter = new SimpleAdapter(
         this,
-        requests,
+        toDataMap(requestList),
         R.layout.list_item_prayer_request,
         new String[]{
             KEY_REQUESTER,
@@ -163,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             indexOrPrayerRequestBeingEdited = position;
-            startPrayerRequestActivity(
-                (PrayerRequest) requests.get(position).get(KEY_PRAYER_REQUEST));
+            startPrayerRequestActivity(requestList.get(position));
           }
         }
     );
@@ -177,6 +176,22 @@ public class MainActivity extends AppCompatActivity {
           }
         }
     );
+
+  }
+
+  private List<Map<String, Object>> toDataMap(List<PrayerRequest> requests) {
+    List<Map<String, Object>> resultMapList = new ArrayList<>();
+    for (PrayerRequest prayerRequest :
+        requests) {
+      Map<String, Object> itemMap = new HashMap<>();
+      itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
+      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(this, prayerRequest.getRequestDate()));
+      itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
+      itemMap.put(KEY_REQUEST_DETAILS, prayerRequest.getRequestDetails());
+      resultMapList.add(itemMap);
+    }
+    return resultMapList;
+
   }
 
   private void confirmAndDeleteItem(final String requestToDelete, final int position) {
@@ -187,88 +202,96 @@ public class MainActivity extends AppCompatActivity {
             getString(R.string.button_yes),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int arg1) {
-                requests.remove(position);
+//                requests.remove(position);
+
                 listAdapter.notifyDataSetChanged();
               }
             })
         .show();
+    Settings settings = new Settings(this);
+    settings.saveRequestList(requestList);
   }
 
   private void startPrayerRequestActivity(PrayerRequest prayerRequest) {
+    String serialaized = new Gson().toJson(prayerRequest);
     Intent intent = new Intent(this, PrayerRequestActivity.class);
-    intent.putExtra(KEY_PRAYER_REQUEST, prayerRequest);
+    intent.putExtra(KEY_PRAYER_REQUEST, serialaized);
     startActivityForResult(intent, ACTIVITY_PRAYER_REQUEST);
   }
 
   private void startPrayerModeActivity(PrayerRequest prayerRequest) {
     Intent intent = new Intent(MainActivity.this, PrayerModeActivity.class);
-    intent.putExtra(KEY_REQUESTER,prayerRequest.getRequester());
-    intent.putExtra(KEY_REQUEST_SUMMARY,prayerRequest.getRequestSummary());
+    intent.putExtra(KEY_REQUESTER, prayerRequest.getRequester());
+    intent.putExtra(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
     intent.putExtra(KEY_PRAYER_REQUEST, prayerRequest);
     startActivity(intent);
   }
 
   private void loadPrayerRequestData() {
-    requests = new ArrayList<>();
+    requestList = new ArrayList<>();
 
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_YEAR, 2);
-    PrayerRequest prayerRequest =
-        new PrayerRequest(
-            "Nikita S.",
-            calendar.getTime(),
-            "Sample request1",
-            "This is a sample resuest\nwith several line feeds\nand with some details.");
-    Map<String, Object> itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest, itemMap);
-    requests.add(itemMap);
+//    Calendar calendar = Calendar.getInstance();
+//    calendar.add(Calendar.DAY_OF_YEAR, 2);
+//    PrayerRequest prayerRequest =
+//        new PrayerRequest(
+//            "Nikita S.",
+//            calendar.getTime(),
+//            "Sample request1",
+//            "This is a sample resuest\nwith several line feeds\nand with some details.");
+//    Map<String, Object> itemMap = new HashMap<>();
+//    putPrayerRequestToItemMap(prayerRequest, itemMap);
+//    requests.add(itemMap);
+//
+//    calendar.add(Calendar.DAY_OF_YEAR, -1);
+//    PrayerRequest prayerRequest2 =
+//        new PrayerRequest(
+//            "Denis D.",
+//            calendar.getTime(),
+//            "Sample request2",
+//            "This is a sample resuest\nwith several line feeds\nand with some details."
+//        );
+//    itemMap = new HashMap<>();
+//    putPrayerRequestToItemMap(prayerRequest2, itemMap);
+//    requests.add(itemMap);
+//
+//    calendar.add(Calendar.DAY_OF_YEAR, +10);
+//    PrayerRequest prayerRequest3 =
+//        new PrayerRequest(
+//            "Andrey D.",
+//            calendar.getTime(),
+//            "Sample request2",
+//            "This is a sample resuest\nwith several line feeds\nand with some details."
+//        );
+//    itemMap = new HashMap<>();
+//    putPrayerRequestToItemMap(prayerRequest3, itemMap);
+//    requests.add(itemMap);
+//    PrayerRequest prayerRequest4 =
+//        new PrayerRequest(
+//            "Boris K.",
+//            new Date(),
+//            "Sample request3",
+//            "If you see this then your first SimpleAdaper has started to work"
+//        );
+//    itemMap = new HashMap<>();
+//    putPrayerRequestToItemMap(prayerRequest4, itemMap);
+//    requests.add(itemMap);
+//
+//    calendar.add(Calendar.DAY_OF_YEAR, -4);
+//    PrayerRequest prayerRequest5 =
+//        new PrayerRequest(
+//            "Никита Ш.",
+//            calendar.getTime(),
+//            "Sample request2",
+//            "This is a sample resuest\nwith several line feeds\nand with some details."
+//        );
+//    itemMap = new HashMap<>();
+//    putPrayerRequestToItemMap(prayerRequest5, itemMap);
+//    requests.add(itemMap);
+//    sortPrayerRequests();
+//    Gson gson = new Gson();
+//    settings.saveRequestList(requests);
+    requestList = settings.getRequestList();
 
-    calendar.add(Calendar.DAY_OF_YEAR, -1);
-    PrayerRequest prayerRequest2 =
-        new PrayerRequest(
-            "Denis D.",
-            calendar.getTime(),
-            "Sample request2",
-            "This is a sample resuest\nwith several line feeds\nand with some details."
-        );
-    itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest2, itemMap);
-    requests.add(itemMap);
-
-    calendar.add(Calendar.DAY_OF_YEAR, +10);
-    PrayerRequest prayerRequest3 =
-        new PrayerRequest(
-            "Andrey D.",
-            calendar.getTime(),
-            "Sample request2",
-            "This is a sample resuest\nwith several line feeds\nand with some details."
-        );
-    itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest3, itemMap);
-    requests.add(itemMap);
-    PrayerRequest prayerRequest4 =
-        new PrayerRequest(
-            "Boris K.",
-            new Date(),
-            "Sample request3",
-            "If you see this then your first SimpleAdaper has started to work"
-        );
-    itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest4, itemMap);
-    requests.add(itemMap);
-
-    calendar.add(Calendar.DAY_OF_YEAR, -4);
-    PrayerRequest prayerRequest5 =
-        new PrayerRequest(
-            "Никита Ш.",
-            calendar.getTime(),
-            "Sample request2",
-            "This is a sample resuest\nwith several line feeds\nand with some details."
-        );
-    itemMap = new HashMap<>();
-    putPrayerRequestToItemMap(prayerRequest5, itemMap);
-    requests.add(itemMap);
-    sortPrayerRequests();
   }
 
   private void sortPrayerRequests() {
@@ -304,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     if (comparator != null) {
-      Collections.sort(requests, comparator);
+//      Collections.sort(requestList, comparator);
     }
   }
 
@@ -318,7 +341,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public static String requestDateString(Context context, Date requestDate) {
-    return DateUtils.formatDateTime(context, requestDate.getTime(), DateUtils.FORMAT_SHOW_DATE);
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+    return format.format(requestDate);
+
   }
 
 

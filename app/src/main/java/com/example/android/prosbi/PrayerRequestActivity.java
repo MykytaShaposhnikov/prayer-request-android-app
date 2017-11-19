@@ -9,7 +9,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
 import java.util.Calendar;
+
+import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
 public class PrayerRequestActivity extends AppCompatActivity {
   private PrayerRequest prayerRequest;
@@ -21,9 +25,26 @@ public class PrayerRequestActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.activity_prayer_request);
-    prayerRequest = (PrayerRequest)
-        getIntent().getSerializableExtra(MainActivity.KEY_PRAYER_REQUEST);
+
+    prayerRequest= new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
+        PrayerRequest.class);
+//
+//    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+//    Date date = new Date();
+//    try {
+//      date = format.parse((String) treeMap.get("requestDate"));
+//    } catch (ParseException e) {
+//      e.printStackTrace();
+//    }
+//    prayerRequest = new PrayerRequest(
+//        (String) treeMap.get("requester"),
+//        date,
+//        (String) treeMap.get("requestSummary"),
+//        (String) treeMap.get("requestDetails"));
+////    prayerRequest = (PrayerRequest)
+//        getIntent().getSerializableExtra(MainActivity.KEY_PRAYER_REQUEST);
     configureRequester();
     configureDate();
     configureRequestSummary();
@@ -81,6 +102,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   private void configureRequestDetails() {
     editTextRequestDetails = (EditText) findViewById(R.id.edit_text_request_details);
     editTextRequestDetails.setText(prayerRequest.getRequestDetails());
+
   }
 
   public void onBackPressed() {
@@ -93,7 +115,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
     prayerRequest.setRequester(editTextRequester.getText().toString());
     prayerRequest.setRequestSummary(editTextRequestSummary.getText().toString());
     prayerRequest.setRequestDetails(editTextRequestDetails.getText().toString());
-    result.putExtra(MainActivity.KEY_PRAYER_REQUEST, prayerRequest);
+    result.putExtra(KEY_PRAYER_REQUEST, new Gson().toJson(prayerRequest));
     setResult(RESULT_OK, result);
   }
 }

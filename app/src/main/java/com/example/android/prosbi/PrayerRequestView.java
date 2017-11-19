@@ -19,7 +19,7 @@ public class PrayerRequestView extends LinearLayout {
   private TextView description;
 
 
-  public PrayerRequestView(Context context, String requestFrom, String requestSummary, String requestFull) {
+  public PrayerRequestView(Context context, String requestFrom, final String requestSummary, final String requestFull) {
     super(context);
     View.inflate(context, R.layout.prayer_request_view_layout, this);
     this.requestFrom = requestFrom;
@@ -29,6 +29,13 @@ public class PrayerRequestView extends LinearLayout {
     description = (TextView) findViewById(R.id.text_view_request);
     title.setText(requestFrom);
     description.setText(requestSummary);
+    description.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        description.setText(requestFull);
+      }
+    });
+
   }
 
   public PrayerRequestView(Context context, @Nullable AttributeSet attrs) {
