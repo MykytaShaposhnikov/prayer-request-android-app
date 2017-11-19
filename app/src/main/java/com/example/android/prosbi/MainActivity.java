@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -295,40 +296,42 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void sortPrayerRequests() {
-    Comparator<Map<String, Object>> comparator = null;
+    Comparator<PrayerRequest> comparator = null;
 
     switch (sortingType) {
       case BY_REQUESTER:
-        comparator = new Comparator<Map<String, Object>>() {
-          public int compare(Map<String, Object> left, Map<String, Object> right) {
-            return ((String) left.get(KEY_REQUESTER)).compareToIgnoreCase(
-                ((String) right.get(KEY_REQUESTER)));
+        comparator = new Comparator<PrayerRequest>() {
+          @Override
+          public int compare(PrayerRequest left, PrayerRequest right) {
+            return  left.getRequester().compareToIgnoreCase(
+                 right.getRequester());
           }
         };
         break;
 
       case BY_REQUEST_DATE_ASCENDING:
-        comparator = new Comparator<Map<String, Object>>() {
-          public int compare(Map<String, Object> left, Map<String, Object> right) {
-            return ((Date) left.get(KEY_REQUEST_DATE)).compareTo(
-                ((Date) right.get(KEY_REQUEST_DATE)));
+        comparator = new Comparator<PrayerRequest>() {
+          @Override
+          public int compare(PrayerRequest left, PrayerRequest right) {
+           return left.getRequestDate().compareTo(right.getRequestDate());
           }
         };
         break;
 
       case BY_REQUEST_DATE_DESCENDING:
-        comparator = new Comparator<Map<String, Object>>() {
-          public int compare(Map<String, Object> left, Map<String, Object> right) {
-            return -((Date) left.get(KEY_REQUEST_DATE)).compareTo(
-                ((Date) right.get(KEY_REQUEST_DATE)));
-          }
-        };
+      comparator =new Comparator<PrayerRequest>() {
+        @Override
+        public int compare(PrayerRequest left, PrayerRequest right) {
+          return -left.getRequestDate().compareTo(right.getRequestDate());
+        }
+      };
         break;
 
     }
-    if (comparator != null) {
-//      Collections.sort(requestList, comparator);
-    }
+
+      Collections.sort(requestList, comparator);
+      createListView();
+
   }
 
   private void putPrayerRequestToItemMap(
