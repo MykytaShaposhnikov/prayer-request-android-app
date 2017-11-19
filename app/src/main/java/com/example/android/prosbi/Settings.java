@@ -63,5 +63,11 @@ public class Settings {
     saveRequestList(list);
   }
 
+  public void removePrayerRequest(int position)
+  {
+    List<PrayerRequest> list=getRequestList();
+    list.remove(position);
+    saveRequestList(list);
+  }
 
 }

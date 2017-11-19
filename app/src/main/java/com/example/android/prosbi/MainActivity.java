@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         new AdapterView.OnItemLongClickListener() {
           public boolean onItemLongClick(
               AdapterView<?> adapterView, View view, int position, long itemId) {
-            confirmAndDeleteItem(adapterView.getItemAtPosition(position).toString(), position);
+            confirmAndDeleteItem( position);
             return true;
           }
         }
@@ -194,22 +194,22 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
-  private void confirmAndDeleteItem(final String requestToDelete, final int position) {
+  private void confirmAndDeleteItem( final int position) {
+
     new AlertDialog.Builder(MainActivity.this)
-        .setMessage(getString(R.string.message_alert, listAdapter.getCount(), requestToDelete))
+        .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
+            requestList.get(position).getRequestSummary()))
         .setNegativeButton(getString(R.string.button_no), null)
         .setPositiveButton(
             getString(R.string.button_yes),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int arg1) {
-//                requests.remove(position);
-
-                listAdapter.notifyDataSetChanged();
+                settings.removePrayerRequest(position);
+                loadPrayerRequestData();
+                createListView();
               }
             })
         .show();
-    Settings settings = new Settings(this);
-    settings.saveRequestList(requestList);
   }
 
   private void startPrayerRequestActivity(PrayerRequest prayerRequest) {
