@@ -115,16 +115,7 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (item.getItemId()) {
       case R.id.item_prayer_mode:
-        AlertDialog dialogPrayerMode =
-            new AlertDialog.Builder(this)
-                .setTitle(R.string.title_prayer_mode)
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int id) {
-                    startPrayerModeActivity(new PrayerRequest());
-                  }
-                })
-                .setNegativeButton(R.string.button_cancel, null).create();
-        dialogPrayerMode.show();
+        startPrayerModeActivity(new PrayerRequest());
         break;
     }
     return true;

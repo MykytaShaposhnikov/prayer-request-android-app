@@ -34,26 +34,15 @@ public class PrayerRequestActivity extends AppCompatActivity {
     prayerRequest = new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
         PrayerRequest.class);
     initialPrayerRequest = new PrayerRequest(prayerRequest);
-//
-//    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
-//    Date date = new Date();
-//    try {
-//      date = format.parse((String) treeMap.get("requestDate"));
-//    } catch (ParseException e) {
-//      e.printStackTrace();
-//    }
-//    prayerRequest = new PrayerRequest(
-//        (String) treeMap.get("requester"),
-//        date,
-//        (String) treeMap.get("requestSummary"),
-//        (String) treeMap.get("requestDetails"));
-////    prayerRequest = (PrayerRequest)
-//        getIntent().getSerializableExtra(MainActivity.KEY_PRAYER_REQUEST);
     configureRequester();
     configureDate();
     configureRequestSummary();
     configureRequestDetails();
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
   }
+
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,6 +53,10 @@ public class PrayerRequestActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        break;
+
       case R.id.item_save:
         saveAndFinish();
         break;
