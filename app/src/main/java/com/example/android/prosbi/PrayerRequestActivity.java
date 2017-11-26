@@ -1,9 +1,13 @@
 package com.example.android.prosbi;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,10 +29,8 @@ public class PrayerRequestActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_prayer_request);
-
-    prayerRequest= new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
+    prayerRequest = new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
         PrayerRequest.class);
 //
 //    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
@@ -49,6 +51,22 @@ public class PrayerRequestActivity extends AppCompatActivity {
     configureDate();
     configureRequestSummary();
     configureRequestDetails();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.prayer_request, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.item_save:
+        saveToResult();
+        break;
+    }
+    return true;
   }
 
   private void configureRequester() {
@@ -106,8 +124,21 @@ public class PrayerRequestActivity extends AppCompatActivity {
   }
 
   public void onBackPressed() {
-    saveToResult();
-    super.onBackPressed();
+    AlertDialog dialogSavePrayerRequest =
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.title_prayer_request)
+            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                saveToResult();}
+            })
+            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(PrayerRequestActivity.this, MainActivity.class);
+                startActivity(intent);
+              }
+            }).create();
+    dialogSavePrayerRequest.show();
+
   }
 
   private void saveToResult() {
@@ -117,5 +148,6 @@ public class PrayerRequestActivity extends AppCompatActivity {
     prayerRequest.setRequestDetails(editTextRequestDetails.getText().toString());
     result.putExtra(KEY_PRAYER_REQUEST, new Gson().toJson(prayerRequest));
     setResult(RESULT_OK, result);
+    super.onBackPressed();
   }
 }

@@ -25,7 +25,7 @@ public class PrayerModeActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_prayer_mode);
     settings = new Settings(this);
-    requests = settings.getRequestList();
+    requests = settings.loadPrayerRequestList();
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_YEAR, 2);

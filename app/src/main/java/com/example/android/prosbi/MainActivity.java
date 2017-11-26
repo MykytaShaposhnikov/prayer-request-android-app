@@ -74,15 +74,15 @@ public class MainActivity extends AppCompatActivity {
         switch (sortingType) {
           case BY_REQUESTER:
             selectedRadioButton =
-                dialogContent.findViewById(R.id.radio_button_sorting_by_requester);
+                (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_requester);
             break;
           case BY_REQUEST_DATE_ASCENDING:
             selectedRadioButton =
-                dialogContent.findViewById(R.id.radio_button_sorting_by_date_ascending);
+                (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_date_ascending);
             break;
           case BY_REQUEST_DATE_DESCENDING:
             selectedRadioButton =
-                dialogContent.findViewById(R.id.radio_button_sorting_by_date_descending);
+                (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_date_descending);
             break;
         }
         selectedRadioButton.setChecked(true);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         new AdapterView.OnItemLongClickListener() {
           public boolean onItemLongClick(
               AdapterView<?> adapterView, View view, int position, long itemId) {
-            confirmAndDeleteItem( position);
+            confirmAndDeleteItem(position);
             return true;
           }
         }
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
-  private void confirmAndDeleteItem( final int position) {
+  private void confirmAndDeleteItem(final int position) {
 
     new AlertDialog.Builder(MainActivity.this)
         .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
@@ -290,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
 //    requests.add(itemMap);
 //    sortPrayerRequests();
 //    Gson gson = new Gson();
-//    settings.saveRequestList(requests);
-    requestList = settings.getRequestList();
+//    settings.savePrayerRequestList(requests);
+    requestList = settings.loadPrayerRequestList();
 
   }
 
@@ -303,8 +303,8 @@ public class MainActivity extends AppCompatActivity {
         comparator = new Comparator<PrayerRequest>() {
           @Override
           public int compare(PrayerRequest left, PrayerRequest right) {
-            return  left.getRequester().compareToIgnoreCase(
-                 right.getRequester());
+            return left.getRequester().compareToIgnoreCase(
+                right.getRequester());
           }
         };
         break;
@@ -313,25 +313,24 @@ public class MainActivity extends AppCompatActivity {
         comparator = new Comparator<PrayerRequest>() {
           @Override
           public int compare(PrayerRequest left, PrayerRequest right) {
-           return left.getRequestDate().compareTo(right.getRequestDate());
+            return left.getRequestDate().compareTo(right.getRequestDate());
           }
         };
         break;
 
       case BY_REQUEST_DATE_DESCENDING:
-      comparator =new Comparator<PrayerRequest>() {
-        @Override
-        public int compare(PrayerRequest left, PrayerRequest right) {
-          return -left.getRequestDate().compareTo(right.getRequestDate());
-        }
-      };
+        comparator = new Comparator<PrayerRequest>() {
+          @Override
+          public int compare(PrayerRequest left, PrayerRequest right) {
+            return -left.getRequestDate().compareTo(right.getRequestDate());
+          }
+        };
         break;
 
     }
 
-      Collections.sort(requestList, comparator);
-      createListView();
-
+    Collections.sort(requestList, comparator);
+    createListView();
   }
 
   private void putPrayerRequestToItemMap(
@@ -344,9 +343,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public static String requestDateString(Context context, Date requestDate) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
     return format.format(requestDate);
-
   }
 
 
