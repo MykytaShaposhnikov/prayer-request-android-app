@@ -28,19 +28,22 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-  private static final int ACTIVITY_PRAYER_REQUEST = 1;
   public static final String KEY_PRAYER_REQUEST = "prayer_request";
   public static final String KEY_REQUESTER = "requester";
   public static final String KEY_REQUEST_DATE_STRING = "date_string";
   public static final String KEY_REQUEST_DATE = "date";
   public static final String KEY_REQUEST_SUMMARY = "summary";
+  private static final int ACTIVITY_PRAYER_REQUEST = 1;
   private static final String KEY_REQUEST_DETAILS = "details";
-  //  private List<Map<String, Object>> requests;
-  private List<PrayerRequest> requestList;
+  private List<PrayerRequest> requests;
   private SimpleAdapter listAdapter;
-  private int indexOrPrayerRequestBeingEdited;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
+
+  public static String requestDateString(Context context, Date requestDate) {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
+    return format.format(requestDate);
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            indexOrPrayerRequestBeingEdited = -1;
-
             startPrayerRequestActivity(new PrayerRequest("", new Date(), "", ""));
           }
         });
@@ -129,16 +130,29 @@ public class MainActivity extends AppCompatActivity {
     return true;
   }
 
-
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if ( resultCode == Activity.RESULT_OK) {
+    if (resultCode == Activity.RESULT_OK) {
       switch (requestCode) {
         case ACTIVITY_PRAYER_REQUEST:
-          PrayerRequest prayerRequest = new Gson().fromJson(data.getStringExtra(KEY_PRAYER_REQUEST),
-              PrayerRequest.class);
-          settings.addPrayerRequest(prayerRequest);
-          loadPrayerRequestData();
+          PrayerRequest updatedPrayerRequest =
+              new Gson().fromJson(data.getStringExtra(KEY_PRAYER_REQUEST),
+                  PrayerRequest.class);
+          PrayerRequest samePrayerRequestInList = null;
+          for (final PrayerRequest prayerRequest : requests) {
+            if (updatedPrayerRequest.getId().equals(prayerRequest.getId())) {
+              samePrayerRequestInList = prayerRequest;
+              break;
+            }
+          }
+          if (samePrayerRequestInList == null) {
+            requests.add(updatedPrayerRequest);
+          } else {
+            requests.remove(samePrayerRequestInList);
+            requests.add(updatedPrayerRequest);
+          }
+          sortPrayerRequests();
+          settings.savePrayerRequests(requests);
           createListView();
           break;
       }
@@ -149,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     final ListView listView = (ListView) findViewById(R.id.list_view_requests);
     listAdapter = new SimpleAdapter(
         this,
-        toDataMap(requestList),
+        toDataMap(requests),
         R.layout.list_item_prayer_request,
         new String[]{
             KEY_REQUESTER,
@@ -166,8 +180,7 @@ public class MainActivity extends AppCompatActivity {
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            indexOrPrayerRequestBeingEdited = position;
-            startPrayerRequestActivity(requestList.get(position));
+            startPrayerRequestActivity(requests.get(position));
           }
         }
     );
@@ -180,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
           }
         }
     );
-
   }
 
   private List<Map<String, Object>> toDataMap(List<PrayerRequest> requests) {
@@ -195,14 +207,12 @@ public class MainActivity extends AppCompatActivity {
       resultMapList.add(itemMap);
     }
     return resultMapList;
-
   }
 
   private void confirmAndDeleteItem(final int position) {
-
     new AlertDialog.Builder(MainActivity.this)
         .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
-            requestList.get(position).getRequestSummary()))
+            requests.get(position).getRequestSummary()))
         .setNegativeButton(getString(R.string.button_no), null)
         .setPositiveButton(
             getString(R.string.button_yes),
@@ -232,70 +242,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void loadPrayerRequestData() {
-    requestList = new ArrayList<>();
-
-//    Calendar calendar = Calendar.getInstance();
-//    calendar.add(Calendar.DAY_OF_YEAR, 2);
-//    PrayerRequest prayerRequest =
-//        new PrayerRequest(
-//            "Nikita S.",
-//            calendar.getTime(),
-//            "Sample request1",
-//            "This is a sample resuest\nwith several line feeds\nand with some details.");
-//    Map<String, Object> itemMap = new HashMap<>();
-//    putPrayerRequestToItemMap(prayerRequest, itemMap);
-//    requests.add(itemMap);
-//
-//    calendar.add(Calendar.DAY_OF_YEAR, -1);
-//    PrayerRequest prayerRequest2 =
-//        new PrayerRequest(
-//            "Denis D.",
-//            calendar.getTime(),
-//            "Sample request2",
-//            "This is a sample resuest\nwith several line feeds\nand with some details."
-//        );
-//    itemMap = new HashMap<>();
-//    putPrayerRequestToItemMap(prayerRequest2, itemMap);
-//    requests.add(itemMap);
-//
-//    calendar.add(Calendar.DAY_OF_YEAR, +10);
-//    PrayerRequest prayerRequest3 =
-//        new PrayerRequest(
-//            "Andrey D.",
-//            calendar.getTime(),
-//            "Sample request2",
-//            "This is a sample resuest\nwith several line feeds\nand with some details."
-//        );
-//    itemMap = new HashMap<>();
-//    putPrayerRequestToItemMap(prayerRequest3, itemMap);
-//    requests.add(itemMap);
-//    PrayerRequest prayerRequest4 =
-//        new PrayerRequest(
-//            "Boris K.",
-//            new Date(),
-//            "Sample request3",
-//            "If you see this then your first SimpleAdaper has started to work"
-//        );
-//    itemMap = new HashMap<>();
-//    putPrayerRequestToItemMap(prayerRequest4, itemMap);
-//    requests.add(itemMap);
-//
-//    calendar.add(Calendar.DAY_OF_YEAR, -4);
-//    PrayerRequest prayerRequest5 =
-//        new PrayerRequest(
-//            "Никита Ш.",
-//            calendar.getTime(),
-//            "Sample request2",
-//            "This is a sample resuest\nwith several line feeds\nand with some details."
-//        );
-//    itemMap = new HashMap<>();
-//    putPrayerRequestToItemMap(prayerRequest5, itemMap);
-//    requests.add(itemMap);
-//    sortPrayerRequests();
-//    Gson gson = new Gson();
-//    settings.savePrayerRequestList(requests);
-    requestList = settings.loadPrayerRequestList();
-
+    requests = settings.loadPrayerRequests();
+    sortPrayerRequests();
   }
 
   private void sortPrayerRequests() {
@@ -332,22 +280,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    Collections.sort(requestList, comparator);
+    Collections.sort(requests, comparator);
     createListView();
-  }
-
-  private void putPrayerRequestToItemMap(
-      final PrayerRequest prayerRequest, Map<String, Object> itemMap) {
-    itemMap.put(KEY_PRAYER_REQUEST, prayerRequest);
-    itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
-    itemMap.put(KEY_REQUEST_DATE, prayerRequest.getRequestDate());
-    itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(this, prayerRequest.getRequestDate()));
-    itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
-  }
-
-  public static String requestDateString(Context context, Date requestDate) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
-    return format.format(requestDate);
   }
 
 

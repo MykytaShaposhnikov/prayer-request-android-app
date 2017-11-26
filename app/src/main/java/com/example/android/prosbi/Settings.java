@@ -1,8 +1,6 @@
 package com.example.android.prosbi;
 
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -16,45 +14,21 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Settings {
-  private static final String KEY_SERIALIZED_REQUEST_LIST = "request_list";
+class Settings {
   private static final String FILE_NAME_PRAYER_REQUESTS = "prayer_requests.json";
   private Context context;
-  private SharedPreferences sharedPreferences;
   private Gson gson;
 
-  public Settings(Context context) {
+  Settings(Context context) {
     this.context = context;
-    sharedPreferences = context.getSharedPreferences("default", Context.MODE_PRIVATE);
     gson = new Gson();
   }
 
-  private void setBoolean(String key, boolean value) {
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putBoolean(key, value);
-    editor.apply();
-  }
-
-  private void setString(String key, String value) {
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putString(key, value);
-    editor.apply();
-  }
-
-  public void setInt(String key, int value) {
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.putInt(key, value);
-    editor.apply();
-  }
-
-  //  public void clearList(){
-//    savePrayerRequestList(new ArrayList<PrayerRequest>());
-//  }
   private File getPrayerRequestsFile() {
     return new File(context.getExternalFilesDir(null), FILE_NAME_PRAYER_REQUESTS);
   }
 
-  public void savePrayerRequestList(List<PrayerRequest> prayerRequests) {
+  void savePrayerRequests(List<PrayerRequest> prayerRequests) {
     String serializedList = gson.toJson(prayerRequests);
     try {
       FileWriter fileWriter = new FileWriter(getPrayerRequestsFile(), false);
@@ -65,7 +39,7 @@ public class Settings {
     }
   }
 
-  public List<PrayerRequest> loadPrayerRequestList() {
+  List<PrayerRequest> loadPrayerRequests() {
     List<PrayerRequest> prayerRequests = null;
     try {
       String serializedList = "";
@@ -92,16 +66,9 @@ public class Settings {
     return prayerRequests;
   }
 
-  public void addPrayerRequest(PrayerRequest toSave) {
-    List<PrayerRequest> list = loadPrayerRequestList();
-    list.add(toSave);
-    savePrayerRequestList(list);
-  }
-
-  public void removePrayerRequest(int position) {
-    List<PrayerRequest> list = loadPrayerRequestList();
+  void removePrayerRequest(int position) {
+    List<PrayerRequest> list = loadPrayerRequests();
     list.remove(position);
-    savePrayerRequestList(list);
+    savePrayerRequests(list);
   }
-
 }
