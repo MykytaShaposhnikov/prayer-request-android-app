@@ -1,5 +1,6 @@
 package com.example.android.prosbi;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -131,14 +132,16 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    switch (requestCode) {
-      case ACTIVITY_PRAYER_REQUEST:
-        PrayerRequest prayerRequest = new Gson().fromJson(data.getStringExtra(KEY_PRAYER_REQUEST),
-            PrayerRequest.class);
-        settings.addPrayerRequest(prayerRequest);
-        loadPrayerRequestData();
-        createListView();
-        break;
+    if ( resultCode == Activity.RESULT_OK) {
+      switch (requestCode) {
+        case ACTIVITY_PRAYER_REQUEST:
+          PrayerRequest prayerRequest = new Gson().fromJson(data.getStringExtra(KEY_PRAYER_REQUEST),
+              PrayerRequest.class);
+          settings.addPrayerRequest(prayerRequest);
+          loadPrayerRequestData();
+          createListView();
+          break;
+      }
     }
   }
 

@@ -20,6 +20,7 @@ import java.util.Calendar;
 import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
 public class PrayerRequestActivity extends AppCompatActivity {
+  private PrayerRequest initialPrayerRequest;
   private PrayerRequest prayerRequest;
   private EditText editTextRequester;
   private Button buttonRequestDate;
@@ -32,6 +33,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
     setContentView(R.layout.activity_prayer_request);
     prayerRequest = new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
         PrayerRequest.class);
+    initialPrayerRequest = new PrayerRequest(prayerRequest);
 //
 //    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
 //    Date date = new Date();
@@ -63,7 +65,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.item_save:
-        saveToResult();
+        saveAndFinish();
         break;
     }
     return true;
@@ -120,34 +122,49 @@ public class PrayerRequestActivity extends AppCompatActivity {
   private void configureRequestDetails() {
     editTextRequestDetails = (EditText) findViewById(R.id.edit_text_request_details);
     editTextRequestDetails.setText(prayerRequest.getRequestDetails());
-
   }
 
   public void onBackPressed() {
-    AlertDialog dialogSavePrayerRequest =
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.title_prayer_request)
-            .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                saveToResult();}
-            })
-            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(PrayerRequestActivity.this, MainActivity.class);
-                startActivity(intent);
-              }
-            }).create();
-    dialogSavePrayerRequest.show();
-
+    if (!isChanged()) {
+      super.onBackPressed();
+    }
   }
 
-  private void saveToResult() {
-    Intent result = new Intent();
+  private void collectFromFields() {
     prayerRequest.setRequester(editTextRequester.getText().toString());
     prayerRequest.setRequestSummary(editTextRequestSummary.getText().toString());
     prayerRequest.setRequestDetails(editTextRequestDetails.getText().toString());
+  }
+
+  private void saveAndFinish() {
+    Intent result = new Intent();
+    collectFromFields();
     result.putExtra(KEY_PRAYER_REQUEST, new Gson().toJson(prayerRequest));
     setResult(RESULT_OK, result);
     super.onBackPressed();
+  }
+
+  private boolean isChanged() {
+    boolean changed = false;
+    collectFromFields();
+    if (!prayerRequest.equals(initialPrayerRequest)) {
+      changed = true;
+      AlertDialog dialogSavePrayerRequest =
+          new AlertDialog.Builder(this)
+              .setTitle(R.string.title_prayer_request)
+              .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  saveAndFinish();
+                }
+              })
+              .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  Intent intent = new Intent(PrayerRequestActivity.this, MainActivity.class);
+                  startActivity(intent);
+                }
+              }).create();
+      dialogSavePrayerRequest.show();
+    }
+    return changed;
   }
 }
