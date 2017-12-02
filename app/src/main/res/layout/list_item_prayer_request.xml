@@ -1,51 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"
-                                     xmlns:tools="http://schemas.android.com/tools"
-                                     android:layout_width="match_parent"
-                                     android:layout_margin="8dp"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp">
 
-                                     android:layout_height="wrap_content">
-
-
-
-<LinearLayout
-
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_default">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="@dimen/margin_default">
 
-        <TextView
-            android:id="@+id/text_view_requester"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            tools:text="Sample requester"/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_view_request_date"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/text_view_requester"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                tools:text="Sample requester"/>
+
+            <TextView
+                android:id="@+id/text_view_request_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_default"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end"
+                tools:text="October 15, 2017"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_default"
-            android:gravity="center_vertical|end"
-            android:layout_weight="1"
-            tools:text="October 15, 2017"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_view_request_summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                tools:text="Sample prayer request\nline2\nline3"/>
+
+            <CheckBox
+                android:id="@+id/checkBoxStar"
+                android:layout_width="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:scaleX="0.60"
+                android:scaleY="0.60"
+                android:layout_height="wrap_content"/>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/text_view_request_summary"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="@dimen/margin_default"
-        android:textStyle="bold"
-        tools:text="Sample prayer request\nline2\nline3"/>
-
-</LinearLayout>
+    </LinearLayout>
 </android.support.v7.widget.CardView>

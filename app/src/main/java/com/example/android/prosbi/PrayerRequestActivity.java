@@ -58,6 +58,9 @@ public class PrayerRequestActivity extends AppCompatActivity {
         break;
 
       case R.id.item_save:
+        if (!isChangedForButtonSave()) {
+          super.onBackPressed();
+        }
         saveAndFinish();
         break;
     }
@@ -160,4 +163,16 @@ public class PrayerRequestActivity extends AppCompatActivity {
     }
     return changed;
   }
+
+  private boolean isChangedForButtonSave() {
+    boolean changed = false;
+    collectFromFields();
+    if (!prayerRequest.equals(initialPrayerRequest)) {
+      changed = true;
+        saveAndFinish();
+    }
+    return changed;
+  }
+
+
 }

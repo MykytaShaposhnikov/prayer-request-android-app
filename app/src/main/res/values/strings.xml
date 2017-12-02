@@ -19,10 +19,12 @@
     <string name="item_save">Save</string>
     <string name="item_prayer_mode">Prayer mode</string>
     <string name="title_sort_by">Sort by</string>
-    <string name="title_prayer_mode">Would you like to open prayer mode?</string>
     <string name="title_prayer_request">Would you like to save your request?</string>
     <string name="radio_button_sorting_by_requester">requester</string>
     <string name="radio_button_sorting_by_date_ascending">date ascending</string>
     <string name="radio_button_sorting_by_date_descending">date descending</string>
+    <string name="radio_button_sorting_by_favorites">by favourites</string>
+    <string name="filtration_by_favorites">filtration</string>
+    <string name="prayer_mode_activity_name">Prayer Mode</string>
 
 </resources>

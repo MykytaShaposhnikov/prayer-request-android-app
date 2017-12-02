@@ -17,7 +17,8 @@ public class PrayerRequestView extends LinearLayout {
   private String requestFull;
   private TextView title;
   private TextView less;
-  private TextView description;
+  private TextView descriptionSummary;
+  private TextView descriptionDetails;
   private TextView more;
   int i=0;
 
@@ -29,10 +30,11 @@ public class PrayerRequestView extends LinearLayout {
     this.requestSummary = requestSummary;
     this.requestFull = requestFull;
     title = (TextView) findViewById(R.id.text_view_request_from);
-    description = (TextView) findViewById(R.id.text_view_request);
+    descriptionSummary = (TextView) findViewById(R.id.text_view_request_summary);
+    descriptionDetails = (TextView) findViewById(R.id.text_view_request_details);
     more = (TextView) findViewById(R.id.text_view_more);
     title.setText(requestFrom);
-    description.setText(requestSummary);
+    descriptionSummary.setText(requestSummary);
     more.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -44,15 +46,20 @@ public class PrayerRequestView extends LinearLayout {
     });
   }
 
+  public void NightMode()
+  {
+
+  }
+
   public void changingMoreToLess()
   { i=1;
-    description.setText(requestFull);
+    descriptionDetails.setText(requestFull);
     more.setText(R.string.text_less);
   }
 
   public void changingLessToMore()
   {i=0;
-    description.setText(requestSummary);
+    descriptionDetails.setText("");
     more.setText(R.string.text_more);
   }
 

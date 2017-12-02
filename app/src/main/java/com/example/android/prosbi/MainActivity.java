@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
   private SimpleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
+  private boolean filtration=false;
+
+  public boolean isFiltration() {
+    return filtration;
+  }
+
 
   public static String requestDateString(Context context, Date requestDate) {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             startPrayerRequestActivity(new PrayerRequest("", new Date(), "", ""));
           }
         });
+
   }
 
   @Override
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     getMenuInflater().inflate(R.menu.main, menu);
     return super.onCreateOptionsMenu(menu);
   }
+
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
             selectedRadioButton =
                 (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_date_descending);
             break;
+          case BY_FAVORITES:
+            selectedRadioButton =
+                (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_favorites);
+            break;
         }
         selectedRadioButton.setChecked(true);
         AlertDialog dialog =
@@ -103,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (((RadioButton) dialogContent.
                         findViewById(R.id.radio_button_sorting_by_date_ascending)).isChecked()) {
                       sortingType = SortingType.BY_REQUEST_DATE_ASCENDING;
+                    }else if (((RadioButton) dialogContent.
+                        findViewById(R.id.radio_button_sorting_by_favorites)).isChecked()) {
+                      sortingType = SortingType.BY_FAVORITES;
                     }
                     sortPrayerRequests();
                     listAdapter.notifyDataSetChanged();
@@ -269,6 +284,18 @@ public class MainActivity extends AppCompatActivity {
         };
         break;
 
+//      case BY_FAVORITES:
+//        CheckBox starCheckBox = (CheckBox) findViewById(R.id.checkBoxStar);
+//        if (starCheckBox.isChecked()) {
+//          filtration=true;
+//        }
+//        comparator = new Comparator<PrayerRequest>() {
+//          public int compare() {
+//            return requests.().compareTo(right.getRequestDate());
+//          }
+//        };
+//
+//        break;
     }
 
     Collections.sort(requests, comparator);
@@ -279,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
   private enum SortingType {
     BY_REQUESTER,
     BY_REQUEST_DATE_ASCENDING,
-    BY_REQUEST_DATE_DESCENDING
+    BY_REQUEST_DATE_DESCENDING,
+    BY_FAVORITES
   }
 }
