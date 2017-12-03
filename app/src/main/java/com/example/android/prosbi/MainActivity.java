@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -193,6 +194,17 @@ public class MainActivity extends AppCompatActivity {
                 settings.removePrayerRequest(position);
                 loadPrayerRequestData();
                 createListView();
+                Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.coordinator_layout), "Moved to completed", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", new View.OnClickListener() {
+                      @Override
+                      public void onClick(View view) {
+                        Snackbar snackbar1 = Snackbar.make(findViewById(R.id.coordinator_layout), "Request restored!", Snackbar.LENGTH_SHORT);
+                        snackbar1.show();
+                      }
+                    });
+
+                snackbar.show();
               }
             }).setIsVertical(false).setItemClickCallback(
             new SwipeDismissRecyclerViewTouchListener.OnItemClickCallBack() {

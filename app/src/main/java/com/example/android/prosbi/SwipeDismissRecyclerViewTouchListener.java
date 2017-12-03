@@ -335,7 +335,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             cancelEvent.recycle();
           }
 
-          if (mSwiping) {
+          if (mSwiping && mDownView != null) {
             mDownView.setTranslationX(deltaX);
             mDownView.setAlpha(Math.max(0f, Math.min(1f,
                 1f - 2f * Math.abs(deltaX) / mViewWidth)));

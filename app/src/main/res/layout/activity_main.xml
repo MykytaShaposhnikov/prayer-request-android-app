@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view_requests"
@@ -17,7 +19,7 @@
         android:background="@drawable/round_button"
         android:gravity="center_vertical|center_horizontal"
         android:text="+"
-        android:textSize="30sp"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textSize="30sp"/>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
