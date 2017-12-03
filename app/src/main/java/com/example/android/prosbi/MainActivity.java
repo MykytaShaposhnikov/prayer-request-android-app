@@ -1,17 +1,16 @@
 package com.example.android.prosbi;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 
@@ -39,16 +38,15 @@ public class MainActivity extends AppCompatActivity {
   private SimpleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
-  private boolean filtration=false;
+  private boolean filtration = false;
+
+  public static String requestDateString(Date requestDate) {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
+    return format.format(requestDate);
+  }
 
   public boolean isFiltration() {
     return filtration;
-  }
-
-
-  public static String requestDateString(Context context, Date requestDate) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
-    return format.format(requestDate);
   }
 
   @Override
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (((RadioButton) dialogContent.
                         findViewById(R.id.radio_button_sorting_by_date_ascending)).isChecked()) {
                       sortingType = SortingType.BY_REQUEST_DATE_ASCENDING;
-                    }else if (((RadioButton) dialogContent.
+                    } else if (((RadioButton) dialogContent.
                         findViewById(R.id.radio_button_sorting_by_favorites)).isChecked()) {
                       sortingType = SortingType.BY_FAVORITES;
                     }
@@ -166,39 +164,51 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void createListView() {
-    final ListView listView = (ListView) findViewById(R.id.list_view_requests);
-    listAdapter = new SimpleAdapter(
-        this,
-        toDataMap(requests),
-        R.layout.list_item_prayer_request,
-        new String[]{
-            KEY_REQUESTER,
-            KEY_REQUEST_DATE_STRING,
-            KEY_REQUEST_SUMMARY
-        },
-        new int[]{
-            R.id.text_view_requester,
-            R.id.text_view_request_date,
-            R.id.text_view_request_summary
-        });
-    listView.setAdapter(listAdapter);
-    listView.setOnItemClickListener(
-        new AdapterView.OnItemClickListener() {
+   RecyclerView.LayoutManager mLayoutManager =  new LinearLayoutManager(this);
+    RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recycle_view_requests);
+    recyclerView.setLayoutManager(mLayoutManager);
+    recyclerView.setAdapter(new CustomRecycleAdapter(requests, this,
+        new CustomRecycleAdapter.OnRecyclerItemClickListener() {
           @Override
-          public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+          public void onItemClick(int position) {
             startPrayerRequestActivity(requests.get(position));
           }
-        }
-    );
-    listView.setOnItemLongClickListener(
-        new AdapterView.OnItemLongClickListener() {
-          public boolean onItemLongClick(
-              AdapterView<?> adapterView, View view, int position, long itemId) {
-            confirmAndDeleteItem(position);
-            return true;
+
+          @Override
+          public void onItemLongClick(int position) {
+
           }
-        }
-    );
+        }));
+
+//    final  listView = (SwipeMenuListView) findViewById(R.id.list_view_requests);
+//    listAdapter = new SimpleAdapter(
+//        this,
+//        toDataMap(requests),
+//        R.layout.list_item_prayer_request,
+//        new String[]{
+//            KEY_REQUESTER,
+//            KEY_REQUEST_DATE_STRING,
+//            KEY_REQUEST_SUMMARY
+//        },
+//        new int[]{
+//            R.id.text_view_requester,
+//            R.id.text_view_request_date,
+//            R.id.text_view_request_summary
+//        }) {
+//      @Override
+//      public View getView(final int position, View convertView, ViewGroup parent) {
+//        View view = super.getView(position, convertView, parent);
+//        view
+//            .setOnClickListener(new View.OnClickListener() {
+//              @Override
+//              public void onClick(View v) {
+//                startPrayerRequestActivity(requests.get(position));
+//              }
+//            });
+//        return view;
+//      }
+//    };
+
   }
 
   private List<Map<String, Object>> toDataMap(List<PrayerRequest> requests) {
@@ -207,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         requests) {
       Map<String, Object> itemMap = new HashMap<>();
       itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
-      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(this, prayerRequest.getRequestDate()));
+      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString( prayerRequest.getRequestDate()));
       itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
       itemMap.put(KEY_REQUEST_DETAILS, prayerRequest.getRequestDetails());
       resultMapList.add(itemMap);

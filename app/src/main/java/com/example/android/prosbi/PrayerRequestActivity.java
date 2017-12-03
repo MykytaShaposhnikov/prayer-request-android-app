@@ -107,7 +107,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   }
 
   private void showDate() {
-    buttonRequestDate.setText(MainActivity.requestDateString(this, prayerRequest.getRequestDate()));
+    buttonRequestDate.setText(MainActivity.requestDateString(prayerRequest.getRequestDate()));
   }
 
   private void configureRequestSummary() {

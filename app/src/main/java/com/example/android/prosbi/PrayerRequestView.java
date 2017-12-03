@@ -1,6 +1,7 @@
 package com.example.android.prosbi;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,11 +13,8 @@ import android.widget.TextView;
  */
 
 public class PrayerRequestView extends LinearLayout {
-  private String requestFrom;
-  private String requestSummary;
   private String requestFull;
   private TextView title;
-  private TextView less;
   private TextView descriptionSummary;
   private TextView descriptionDetails;
   private TextView more;
@@ -26,8 +24,6 @@ public class PrayerRequestView extends LinearLayout {
   public PrayerRequestView(Context context, String requestFrom, final String requestSummary, final String requestFull) {
     super(context);
     View.inflate(context, R.layout.prayer_request_view_layout, this);
-    this.requestFrom = requestFrom;
-    this.requestSummary = requestSummary;
     this.requestFull = requestFull;
     title = (TextView) findViewById(R.id.text_view_request_from);
     descriptionSummary = (TextView) findViewById(R.id.text_view_request_summary);
@@ -44,12 +40,16 @@ public class PrayerRequestView extends LinearLayout {
        changingLessToMore();
       }
     });
+    nightMode();
   }
-
-  public void NightMode()
-  {
-
-  }
+    public void nightMode ()
+    {
+      setBackgroundColor(Color.parseColor("#000000"));
+      title.setTextColor(Color.parseColor("#FFFFFF"));
+      descriptionSummary.setTextColor(Color.parseColor("#FFFFFF"));
+      descriptionDetails.setTextColor(Color.parseColor("#FFFFFF"));
+      more.setTextColor(Color.parseColor("#FFFFFF"));
+    }
 
   public void changingMoreToLess()
   { i=1;
@@ -67,4 +67,5 @@ public class PrayerRequestView extends LinearLayout {
     super(context, attrs);
     View.inflate(context, R.layout.prayer_request_view_layout, this);
   }
+
 }

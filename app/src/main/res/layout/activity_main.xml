@@ -3,13 +3,10 @@
              android:layout_width="fill_parent"
              android:layout_height="fill_parent">
 
-    <ListView
-        android:id="@+id/list_view_requests"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view_requests"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:choiceMode="multipleChoice"
-        android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:layout_height="fill_parent"/>
 
     <Button
         android:id="@+id/button_new_request"

@@ -40,7 +40,6 @@ public class PrayerModeActivity extends AppCompatActivity {
         super.onBackPressed();
         break;
       case R.id.item_night_mode:
-
         break;
     }
 
