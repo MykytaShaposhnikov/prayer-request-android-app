@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void createListView() {
-   RecyclerView.LayoutManager mLayoutManager =  new LinearLayoutManager(this);
-    RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recycle_view_requests);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_requests);
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setAdapter(new CustomRecycleAdapter(requests, this,
         new CustomRecycleAdapter.OnRecyclerItemClickListener() {
@@ -179,6 +179,31 @@ public class MainActivity extends AppCompatActivity {
 
           }
         }));
+
+    SwipeDismissRecyclerViewTouchListener listener =
+        new SwipeDismissRecyclerViewTouchListener.Builder(recyclerView,
+            new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+              @Override
+              public boolean canDismiss(int position) {
+                return true;
+              }
+
+              @Override
+              public void onDismiss(View view, int position) {
+                settings.removePrayerRequest(position);
+                loadPrayerRequestData();
+                createListView();
+              }
+            }).setIsVertical(false).setItemClickCallback(
+            new SwipeDismissRecyclerViewTouchListener.OnItemClickCallBack() {
+              @Override
+              public void onClick(int position) {
+                startPrayerRequestActivity(requests.get(position));
+              }
+            }
+        ).create();
+
+    recyclerView.setOnTouchListener(listener);
 
 //    final  listView = (SwipeMenuListView) findViewById(R.id.list_view_requests);
 //    listAdapter = new SimpleAdapter(
@@ -217,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         requests) {
       Map<String, Object> itemMap = new HashMap<>();
       itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
-      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString( prayerRequest.getRequestDate()));
+      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(prayerRequest.getRequestDate()));
       itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
       itemMap.put(KEY_REQUEST_DETAILS, prayerRequest.getRequestDetails());
       resultMapList.add(itemMap);
