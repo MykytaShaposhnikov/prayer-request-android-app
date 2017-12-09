@@ -9,11 +9,6 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/item_filtration_by_favorites"
-        android:title="@string/filtration_by_favorites"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/item_sorting"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="@string/item_sorting"

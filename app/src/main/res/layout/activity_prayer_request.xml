@@ -6,81 +6,84 @@
     android:orientation="vertical"
     android:padding="@dimen/margin_activity_boundary">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <include layout="@layout/requester"/>
+    <include layout="@layout/request_summary_and_details"/>
+    <include layout="@layout/request_date"/>
 
-        <TableRow>
+    <!--<TableLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="@string/text_requester"/>
+        <!--<TableRow>-->
 
-            <EditText
-                android:id="@+id/edit_text_requester"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"/>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="right"-->
+                <!--android:text="@string/text_requester"/>-->
 
-        </TableRow>
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_requester"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:maxLines="1"/>-->
 
-        <TableRow>
+        <!--</TableRow>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="@string/text_date"/>
+        <!--<TableRow>-->
 
-            <Button
-                android:id="@+id/button_request_date"
-                android:layout_width="@dimen/width_date"
-                android:layout_height="wrap_content"/>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="right"-->
+                <!--android:text="@string/text_date"/>-->
 
-        </TableRow>
+            <!--<Button-->
+                <!--android:id="@+id/button_request_date"-->
+                <!--android:layout_width="@dimen/width_date"-->
+                <!--android:layout_height="wrap_content"/>-->
 
-        <TableRow>
+        <!--</TableRow>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="@string/text_request_summary"/>
+        <!--<TableRow>-->
 
-            <EditText
-                android:id="@+id/edit_text_request_summary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="1"/>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="right"-->
+                <!--android:text="@string/text_request_summary"/>-->
 
-        </TableRow>
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_request_summary"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:maxLines="1"/>-->
 
-    </TableLayout>
+        <!--</TableRow>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_weight="1"
-        android:orientation="vertical">
+    <!--</TableLayout>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_enter_request"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginTop="@dimen/margin_large"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
 
-        <EditText
-            android:id="@+id/edit_text_request_details"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:inputType="textMultiLine"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/text_enter_request"/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/edit_text_request_details"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="top"-->
+            <!--android:inputType="textMultiLine"/>-->
 
     </LinearLayout>
 
-</LinearLayout>

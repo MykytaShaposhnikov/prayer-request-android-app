@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.SimpleAdapter;
 
 import com.google.gson.Gson;
 
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
   private static final int ACTIVITY_PRAYER_REQUEST = 1;
   private static final String KEY_REQUEST_DETAILS = "details";
   private List<PrayerRequest> requests;
-  private SimpleAdapter listAdapter;
+  private CustomRecycleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
   private boolean filtration = false;
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_requests);
     recyclerView.setLayoutManager(mLayoutManager);
-    recyclerView.setAdapter(new CustomRecycleAdapter(requests, this,
+   listAdapter =  new CustomRecycleAdapter(requests, this,
         new CustomRecycleAdapter.OnRecyclerItemClickListener() {
           @Override
           public void onItemClick(int position) {
@@ -178,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
           public void onItemLongClick(int position) {
 
           }
-        }));
+        });
+    recyclerView.setAdapter(listAdapter);
 
     SwipeDismissRecyclerViewTouchListener listener =
         new SwipeDismissRecyclerViewTouchListener.Builder(recyclerView,
@@ -263,22 +263,22 @@ public class MainActivity extends AppCompatActivity {
     return resultMapList;
   }
 
-  private void confirmAndDeleteItem(final int position) {
-    new AlertDialog.Builder(MainActivity.this)
-        .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
-            requests.get(position).getRequestSummary()))
-        .setNegativeButton(getString(R.string.button_no), null)
-        .setPositiveButton(
-            getString(R.string.button_yes),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int arg1) {
-                settings.removePrayerRequest(position);
-                loadPrayerRequestData();
-                createListView();
-              }
-            })
-        .show();
-  }
+//  private void confirmAndDeleteItem(final int position) {
+//    new AlertDialog.Builder(MainActivity.this)
+//        .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
+//            requests.get(position).getRequestSummary()))
+//        .setNegativeButton(getString(R.string.button_no), null)
+//        .setPositiveButton(
+//            getString(R.string.button_yes),
+//            new DialogInterface.OnClickListener() {
+//              public void onClick(DialogInterface dialog, int arg1) {
+//                settings.removePrayerRequest(position);
+//                loadPrayerRequestData();
+//                createListView();
+//              }
+//            })
+//        .show();
+//  }
 
   private void startPrayerRequestActivity(PrayerRequest prayerRequest) {
     String serialaized = new Gson().toJson(prayerRequest);
