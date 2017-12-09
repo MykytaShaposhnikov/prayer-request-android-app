@@ -8,18 +8,27 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view_requests"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/button_new_request"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <!--<Button-->
+        <!--android:id="@+id/button_new_request"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:background="@drawable/round_button"-->
+        <!--android:gravity="center_vertical|center_horizontal"-->
+        <!--android:text="+"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textSize="30sp"/>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_request_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="8dp"
-        android:background="@drawable/round_button"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="+"
-        android:textColor="#ffffff"
-        android:textSize="30sp"/>
+        android:layout_margin="@dimen/margin_large"
+        android:padding="@dimen/margin_default"
+        android:src="@drawable/ic_add_white_36dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

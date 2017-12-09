@@ -16,8 +16,10 @@ import java.util.List;
 
 class Settings {
   private static final String FILE_NAME_PRAYER_REQUESTS = "prayer_requests.json";
+  private static final String FILE_NAME_DELETED_PRAYER_REQUESTS = "deleted_prayer_requests.json";
   private Context context;
   private Gson gson;
+  private boolean isDeleted=false;
 
   Settings(Context context) {
     this.context = context;
@@ -26,6 +28,10 @@ class Settings {
 
   private File getPrayerRequestsFile() {
     return new File(context.getExternalFilesDir(null), FILE_NAME_PRAYER_REQUESTS);
+  }
+
+  private File getDeletedPrayerRequestsFile() {
+    return new File(context.getExternalFilesDir(null), FILE_NAME_DELETED_PRAYER_REQUESTS);
   }
 
   void savePrayerRequests(List<PrayerRequest> prayerRequests) {
@@ -71,4 +77,16 @@ class Settings {
     list.remove(position);
     savePrayerRequests(list);
   }
+
+  void saveDeletedPrayerRequests(PrayerRequest deletedPrayerRequests) {
+    String serializedList = gson.toJson(deletedPrayerRequests);
+    try {
+      FileWriter fileWriter = new FileWriter(getDeletedPrayerRequestsFile(), false);
+      fileWriter.append(serializedList);
+      fileWriter.close();
+    } catch (IOException exception) {
+      Log.e("Settings", "Failed to save prayer requests to file", exception);
+    }
+  }
+
 }

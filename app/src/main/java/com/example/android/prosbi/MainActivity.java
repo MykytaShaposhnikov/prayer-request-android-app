@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
   public static final String KEY_PRAYER_REQUEST = "prayer_request";
   public static final String KEY_REQUESTER = "requester";
   public static final String KEY_REQUEST_DATE_STRING = "date_string";
-  public static final String KEY_REQUEST_DATE = "date";
   public static final String KEY_REQUEST_SUMMARY = "summary";
   private static final int ACTIVITY_PRAYER_REQUEST = 1;
   private static final String KEY_REQUEST_DETAILS = "details";
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     settings = new Settings(this);
     loadPrayerRequestData();
     createListView();
-    findViewById(R.id.button_new_request).setOnClickListener(
+    findViewById(R.id.button_request_date).setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createListView() {
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_requests);
+    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_requests);
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setAdapter(new CustomRecycleAdapter(requests, this,
         new CustomRecycleAdapter.OnRecyclerItemClickListener() {
@@ -192,8 +191,10 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onDismiss(View view, int position) {
                 settings.removePrayerRequest(position);
+                settings.saveDeletedPrayerRequests(requests.get(position));
                 loadPrayerRequestData();
                 createListView();
+
                 Snackbar snackbar = Snackbar
                     .make(findViewById(R.id.coordinator_layout), "Moved to completed", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {

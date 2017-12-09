@@ -73,7 +73,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   }
 
   private void configureDate() {
-    buttonRequestDate = (Button) findViewById(R.id.button_new_request);
+    buttonRequestDate = (Button) findViewById(R.id.button_request_date);
     showDate();
     buttonRequestDate.setOnClickListener(
         new View.OnClickListener() {
