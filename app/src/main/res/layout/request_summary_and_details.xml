@@ -20,7 +20,7 @@
             android:layout_marginStart="@dimen/margin_default"
             android:layout_marginBottom="@dimen/margin_large"
             android:hint="@string/text_request_summary"
-            android:maxLines="1"/>
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="match_parent"

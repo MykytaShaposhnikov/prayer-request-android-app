@@ -1,7 +1,6 @@
 package com.example.android.prosbi;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,6 +17,7 @@ public class PrayerRequestView extends LinearLayout {
   private TextView descriptionSummary;
   private TextView descriptionDetails;
   private TextView more;
+  private boolean isNightMode = false;
   int i=0;
 
 
@@ -40,16 +40,12 @@ public class PrayerRequestView extends LinearLayout {
        changingLessToMore();
       }
     });
-    nightMode();
   }
-    public void nightMode ()
-    {
-      setBackgroundColor(Color.parseColor("#000000"));
-      title.setTextColor(Color.parseColor("#FFFFFF"));
-      descriptionSummary.setTextColor(Color.parseColor("#FFFFFF"));
-      descriptionDetails.setTextColor(Color.parseColor("#FFFFFF"));
-      more.setTextColor(Color.parseColor("#FFFFFF"));
-    }
+
+  public void setNightMode(boolean nightMode) {
+    isNightMode = nightMode;
+    changeMode();
+  }
 
   public void changingMoreToLess()
   { i=1;
@@ -66,6 +62,25 @@ public class PrayerRequestView extends LinearLayout {
   public PrayerRequestView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     View.inflate(context, R.layout.prayer_request_view_layout, this);
+  }
+
+  private void changeMode() {
+    int backgrounColor = isNightMode ?
+        getResources().getColor(R.color.colorNightModeBackground) :
+        getResources().getColor(R.color.transparent);
+    int textColor = isNightMode ?
+        getResources().getColor(R.color.colorNightModeText) :
+        getResources().getColor(R.color.colorNightModeBackground);
+
+    setBackgroundColor(backgrounColor);
+    TextView textViewRequestFrom = (TextView) findViewById(R.id.text_view_request_from);
+    textViewRequestFrom.setTextColor(textColor);
+    TextView textViewRequestSummary = (TextView) findViewById(R.id.text_view_request_summary);
+    textViewRequestSummary.setTextColor(textColor);
+    TextView textViewRequestDetails = (TextView) findViewById(R.id.text_view_request_details);
+    textViewRequestDetails.setTextColor(textColor);
+    TextView textViewMore = (TextView) findViewById(R.id.text_view_more);
+    textViewMore.setTextColor(textColor);
   }
 
 }

@@ -10,10 +10,17 @@ import java.util.List;
   public class CustomViewPagerAdapter extends PagerAdapter {
     private List<PrayerRequest> requests;
     private Context context;
+    private boolean isNightMode = false;
 
     public CustomViewPagerAdapter(Context context, List<PrayerRequest> requests) {
       this.requests = requests;
       this.context = context;
+    }
+
+    public void setNightMode(boolean nightMode) {
+      isNightMode = nightMode;
+      notifyDataSetChanged();
+
     }
 
     @Override
@@ -31,6 +38,7 @@ import java.util.List;
     PrayerRequest request = requests.get(position);
     PrayerRequestView view = new PrayerRequestView(context, request.getRequester(),
         request.getRequestSummary(), request.getRequestDetails());
+    view.setNightMode(isNightMode);
     container.addView(view);
     return view;
   }
@@ -39,4 +47,9 @@ import java.util.List;
   public void destroyItem(ViewGroup container, int position, Object object) {
     container.removeView((View) object);
   }
-}
+
+    @Override
+    public int getItemPosition(Object object) {
+      return POSITION_NONE;
+    }
+  }

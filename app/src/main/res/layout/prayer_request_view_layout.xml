@@ -6,7 +6,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/text_view_request_from"
             android:layout_width="wrap_content"
@@ -38,10 +37,10 @@
             android:id="@+id/text_view_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp"
+            android:layout_margin="30dp"
             android:gravity="center"
-            android:text="More"
-            android:textSize="25sp"
+            android:text="@string/text_more"
+            android:textSize="15sp"
             />
 
     </LinearLayout>

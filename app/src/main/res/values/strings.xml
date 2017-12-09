@@ -12,8 +12,8 @@
     <string name="text_requester">Requester:</string>
     <string name="text_request_summary">Request summary:</string>
     <string name="text_date">Date of request: %s</string>
-    <string name="text_less">Less</string>
-    <string name="text_more">More</string>
+    <string name="text_less"><u>less</u></string>
+    <string name="text_more"><u>more</u></string>
     <string name="button_back">Prayer request:</string>
     <string name="item_sorting">Sorting</string>
     <string name="item_save">Save</string>

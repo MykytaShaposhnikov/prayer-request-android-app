@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import java.util.Calendar;
 
 public class PrayerModeActivity extends AppCompatActivity {
+  boolean isNightMode = false;
+  ViewPager viewPager;
+  private CustomViewPagerAdapter adapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -19,20 +22,23 @@ public class PrayerModeActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_YEAR, 2);
 
-    ViewPager viewPager = (ViewPager)
+    viewPager = (ViewPager)
         findViewById(R.id.view_pager_prayer_request);
-    viewPager.setAdapter(
-        new CustomViewPagerAdapter(
-            this, new Settings(this).loadPrayerRequests()));
+
+    adapter = new CustomViewPagerAdapter(
+        this, new Settings(this).loadPrayerRequests());
+    viewPager.setAdapter(adapter);
     if (getSupportActionBar() != null) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
   }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.prayer_mode, menu);
     return super.onCreateOptionsMenu(menu);
   }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -40,9 +46,13 @@ public class PrayerModeActivity extends AppCompatActivity {
         super.onBackPressed();
         break;
       case R.id.item_night_mode:
+        isNightMode = !isNightMode;
+        adapter.setNightMode(isNightMode);
         break;
     }
 
     return true;
   }
+
+
 }
