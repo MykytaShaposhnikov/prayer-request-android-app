@@ -1,21 +1,21 @@
 package com.example.android.prosbi;
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
-
-import java.util.Calendar;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
 
@@ -23,9 +23,10 @@ public class PrayerRequestActivity extends AppCompatActivity {
   private PrayerRequest initialPrayerRequest;
   private PrayerRequest prayerRequest;
   private EditText editTextRequester;
-  private Button buttonRequestDate;
+  private TextView buttonRequestDate;
   private EditText editTextRequestSummary;
   private EditText editTextRequestDetails;
+  private MaterialCalendarView calendar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,14 @@ public class PrayerRequestActivity extends AppCompatActivity {
     if (getSupportActionBar() != null) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    findViewById(R.id.date_card_view).setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            calendar.setVisibility(calendar.isShown() ? View.GONE : View.VISIBLE);
+          }
+        });
   }
 
 
@@ -73,41 +82,58 @@ public class PrayerRequestActivity extends AppCompatActivity {
   }
 
   private void configureDate() {
-    buttonRequestDate = (Button) findViewById(R.id.button_request_date);
-    showDate();
-    buttonRequestDate.setOnClickListener(
-        new View.OnClickListener() {
+    calendar = (MaterialCalendarView) findViewById(R.id.calendar);
+    calendar.setDateSelected(prayerRequest.getRequestDate(),true);
+    calendar.setCurrentDate(prayerRequest.getRequestDate());
+    calendar.setOnDateChangedListener(
+        new OnDateSelectedListener() {
           @Override
-          public void onClick(View view) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(prayerRequest.getRequestDate());
-            new DatePickerDialog(
-                PrayerRequestActivity.this,
-                new DatePickerDialog.OnDateSetListener() {
-                  @Override
-                  public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, month);
-                    calendar.set(Calendar.DAY_OF_MONTH, day);
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.set(Calendar.SECOND, 0);
-                    prayerRequest.setRequestDate(calendar.getTime());
-                    showDate();
-                  }
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show();
+          public void onDateSelected(@NonNull MaterialCalendarView widget,
+                                     @NonNull CalendarDay date, boolean selected) {
+            prayerRequest.setRequestDate(date.getCalendar().getTime());
+            showDate();
           }
         }
     );
+    buttonRequestDate = (TextView) findViewById(R.id.text_view_request_date);
+    showDate();
+//    buttonRequestDate.setOnClickListener(
+//        new View.OnClickListener() {
+//          @Override
+//          public void onClick(View view) {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(prayerRequest.getRequestDate());
+//            new DatePickerDialog(
+//                PrayerRequestActivity.this,
+//                new DatePickerDialog.OnDateSetListener() {
+//                  @Override
+//                  public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.set(Calendar.YEAR, year);
+//                    calendar.set(Calendar.MONTH, month);
+//                    calendar.set(Calendar.DAY_OF_MONTH, day);
+//                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+//                    calendar.set(Calendar.MINUTE, 0);
+//                    calendar.set(Calendar.SECOND, 0);
+//                    prayerRequest.setRequestDate(calendar.getTime());
+//                    showDate();
+//                  }
+//                },
+//                calendar.get(Calendar.YEAR),
+//                calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH)
+//            ).show();
+//          }
+//        }
+//    );
   }
 
   private void showDate() {
-    buttonRequestDate.setText(MainActivity.requestDateString(prayerRequest.getRequestDate()));
+    buttonRequestDate.setText(getResources().getString(
+        R.string.text_date,
+        MainActivity.requestDateString(prayerRequest.getRequestDate())
+        )
+    );
   }
 
   private void configureRequestSummary() {
@@ -169,7 +195,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
     collectFromFields();
     if (!prayerRequest.equals(initialPrayerRequest)) {
       changed = true;
-        saveAndFinish();
+      saveAndFinish();
     }
     return changed;
   }

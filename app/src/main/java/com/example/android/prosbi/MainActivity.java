@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     settings = new Settings(this);
     loadPrayerRequestData();
     createListView();
-    findViewById(R.id.button_request_date).setOnClickListener(
+    findViewById(R.id.button_add_request).setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -217,36 +217,6 @@ public class MainActivity extends AppCompatActivity {
         ).create();
 
     recyclerView.setOnTouchListener(listener);
-
-//    final  listView = (SwipeMenuListView) findViewById(R.id.list_view_requests);
-//    listAdapter = new SimpleAdapter(
-//        this,
-//        toDataMap(requests),
-//        R.layout.list_item_prayer_request,
-//        new String[]{
-//            KEY_REQUESTER,
-//            KEY_REQUEST_DATE_STRING,
-//            KEY_REQUEST_SUMMARY
-//        },
-//        new int[]{
-//            R.id.text_view_requester,
-//            R.id.text_view_request_date,
-//            R.id.text_view_request_summary
-//        }) {
-//      @Override
-//      public View getView(final int position, View convertView, ViewGroup parent) {
-//        View view = super.getView(position, convertView, parent);
-//        view
-//            .setOnClickListener(new View.OnClickListener() {
-//              @Override
-//              public void onClick(View v) {
-//                startPrayerRequestActivity(requests.get(position));
-//              }
-//            });
-//        return view;
-//      }
-//    };
-
   }
 
   private List<Map<String, Object>> toDataMap(List<PrayerRequest> requests) {
