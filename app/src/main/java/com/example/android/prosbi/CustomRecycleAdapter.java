@@ -35,14 +35,7 @@ public class CustomRecycleAdapter extends RecyclerView.Adapter<CustomRecycleAdap
     holder.requester.setText(request.getRequester());
     holder.date.setText(MainActivity.requestDateString(request.getRequestDate()));
     holder.requestSummary.setText(request.getRequestSummary());
-//    holder.cardView.setOnClickListener(
-//        new View.OnClickListener() {
-//          @Override
-//          public void onClick(View v) {
-//            listener.onItemClick(position);
-//          }
-//        }
-//    );
+
   }
 
   @Override
@@ -52,7 +45,6 @@ public class CustomRecycleAdapter extends RecyclerView.Adapter<CustomRecycleAdap
 
   public interface OnRecyclerItemClickListener {
     void onItemClick(int position);
-
     void onItemLongClick(int position);
   }
 

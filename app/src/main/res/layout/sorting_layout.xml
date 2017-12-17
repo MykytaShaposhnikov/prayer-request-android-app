@@ -24,10 +24,4 @@
         android:layout_height="wrap_content"
         android:text="@string/radio_button_sorting_by_date_descending"/>
 
-    <RadioButton
-        android:id="@+id/radio_button_sorting_by_favorites"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/radio_button_sorting_by_favorites"/>
-
 </RadioGroup>

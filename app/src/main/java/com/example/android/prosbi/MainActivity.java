@@ -17,14 +17,11 @@ import android.widget.RadioButton;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
   public static final String KEY_PRAYER_REQUEST = "prayer_request";
@@ -34,18 +31,14 @@ public class MainActivity extends AppCompatActivity {
   private static final int ACTIVITY_PRAYER_REQUEST = 1;
   private static final String KEY_REQUEST_DETAILS = "details";
   private List<PrayerRequest> requests;
+  private List<PrayerRequest> deletedRequests;
   private CustomRecycleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
-  private boolean filtration = false;
 
   public static String requestDateString(Date requestDate) {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
     return format.format(requestDate);
-  }
-
-  public boolean isFiltration() {
-    return filtration;
   }
 
   @Override
@@ -91,10 +84,6 @@ public class MainActivity extends AppCompatActivity {
             selectedRadioButton =
                 (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_date_descending);
             break;
-          case BY_FAVORITES:
-            selectedRadioButton =
-                (RadioButton) dialogContent.findViewById(R.id.radio_button_sorting_by_favorites);
-            break;
         }
         selectedRadioButton.setChecked(true);
         AlertDialog dialog =
@@ -112,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
                     } else if (((RadioButton) dialogContent.
                         findViewById(R.id.radio_button_sorting_by_date_ascending)).isChecked()) {
                       sortingType = SortingType.BY_REQUEST_DATE_ASCENDING;
-                    } else if (((RadioButton) dialogContent.
-                        findViewById(R.id.radio_button_sorting_by_favorites)).isChecked()) {
-                      sortingType = SortingType.BY_FAVORITES;
                     }
                     sortPrayerRequests();
                     listAdapter.notifyDataSetChanged();
@@ -190,11 +176,12 @@ public class MainActivity extends AppCompatActivity {
 
               @Override
               public void onDismiss(View view, int position) {
+                settings.setDeletedPrayerRequest(position);
                 settings.removePrayerRequest(position);
-                settings.saveDeletedPrayerRequests(requests.get(position));
+                deletedRequests = settings.loadDeletedPrayerRequests();
+                settings.saveDeletedPrayerRequests(deletedRequests);
                 loadPrayerRequestData();
                 createListView();
-
                 Snackbar snackbar = Snackbar
                     .make(findViewById(R.id.coordinator_layout), "Moved to completed", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {
@@ -218,37 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
     recyclerView.setOnTouchListener(listener);
   }
-
-  private List<Map<String, Object>> toDataMap(List<PrayerRequest> requests) {
-    List<Map<String, Object>> resultMapList = new ArrayList<>();
-    for (PrayerRequest prayerRequest :
-        requests) {
-      Map<String, Object> itemMap = new HashMap<>();
-      itemMap.put(KEY_REQUESTER, prayerRequest.getRequester());
-      itemMap.put(KEY_REQUEST_DATE_STRING, requestDateString(prayerRequest.getRequestDate()));
-      itemMap.put(KEY_REQUEST_SUMMARY, prayerRequest.getRequestSummary());
-      itemMap.put(KEY_REQUEST_DETAILS, prayerRequest.getRequestDetails());
-      resultMapList.add(itemMap);
-    }
-    return resultMapList;
-  }
-
-//  private void confirmAndDeleteItem(final int position) {
-//    new AlertDialog.Builder(MainActivity.this)
-//        .setMessage(getString(R.string.message_alert, listAdapter.getCount(),
-//            requests.get(position).getRequestSummary()))
-//        .setNegativeButton(getString(R.string.button_no), null)
-//        .setPositiveButton(
-//            getString(R.string.button_yes),
-//            new DialogInterface.OnClickListener() {
-//              public void onClick(DialogInterface dialog, int arg1) {
-//                settings.removePrayerRequest(position);
-//                loadPrayerRequestData();
-//                createListView();
-//              }
-//            })
-//        .show();
-//  }
 
   private void startPrayerRequestActivity(PrayerRequest prayerRequest) {
     String serialaized = new Gson().toJson(prayerRequest);
@@ -301,25 +257,10 @@ public class MainActivity extends AppCompatActivity {
           }
         };
         break;
-
-//      case BY_FAVORITES:
-//        CheckBox starCheckBox = (CheckBox) findViewById(R.id.checkBoxStar);
-//        if (starCheckBox.isChecked()) {
-//          filtration=true;
-//        }
-//        comparator = new Comparator<PrayerRequest>() {
-//          public int compare() {
-//            return requests.().compareTo(right.getRequestDate());
-//          }
-//        };
-//
-//        break;
     }
-
     Collections.sort(requests, comparator);
     createListView();
   }
-
 
   private enum SortingType {
     BY_REQUESTER,

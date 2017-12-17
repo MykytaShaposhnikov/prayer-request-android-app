@@ -73,14 +73,11 @@ public class PrayerRequest implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof PrayerRequest)) return false;
-
     PrayerRequest request = (PrayerRequest) o;
-
     if (!requester.equals(request.requester)) return false;
     if (!requestDate.equals(request.requestDate)) return false;
     if (!requestSummary.equals(request.requestSummary)) return false;
     return requestDetails.equals(request.requestDetails);
-
   }
 
   @Override

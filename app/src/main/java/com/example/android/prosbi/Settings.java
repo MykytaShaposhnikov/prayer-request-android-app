@@ -19,7 +19,6 @@ class Settings {
   private static final String FILE_NAME_DELETED_PRAYER_REQUESTS = "deleted_prayer_requests.json";
   private Context context;
   private Gson gson;
-  private boolean isDeleted=false;
 
   Settings(Context context) {
     this.context = context;
@@ -78,7 +77,12 @@ class Settings {
     savePrayerRequests(list);
   }
 
-  void saveDeletedPrayerRequests(PrayerRequest deletedPrayerRequests) {
+  void setDeletedPrayerRequest(int position) {
+    List<PrayerRequest> list = loadDeletedPrayerRequests();
+    saveDeletedPrayerRequests(list);
+  }
+
+  void saveDeletedPrayerRequests(List<PrayerRequest> deletedPrayerRequests) {
     String serializedList = gson.toJson(deletedPrayerRequests);
     try {
       FileWriter fileWriter = new FileWriter(getDeletedPrayerRequestsFile(), false);
@@ -87,6 +91,34 @@ class Settings {
     } catch (IOException exception) {
       Log.e("Settings", "Failed to save prayer requests to file", exception);
     }
+  }
+
+
+  List<PrayerRequest> loadDeletedPrayerRequests() {
+    List<PrayerRequest> prayerRequests = null;
+    try {
+      String serializedList = "";
+      Reader reader = new FileReader(getDeletedPrayerRequestsFile());
+      StringBuilder sb = new StringBuilder();
+      char[] buffer = new char[4096];
+      int len;
+      while ((len = reader.read(buffer)) > 0) {
+        sb.append(buffer, 0, len);
+      }
+      reader.close();
+      serializedList = sb.toString();
+      prayerRequests =
+          gson.fromJson(
+              serializedList,
+              new TypeToken<List<PrayerRequest>>() {
+              }.getType());
+    } catch (Exception exception) {
+      Log.e("Settings", "Failed to load prayer requests from file", exception);
+    }
+    if (prayerRequests == null) {
+      prayerRequests = new ArrayList<>();
+    }
+    return prayerRequests;
   }
 
 }

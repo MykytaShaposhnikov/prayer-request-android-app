@@ -65,14 +65,14 @@ public class PrayerRequestView extends LinearLayout {
   }
 
   private void changeMode() {
-    int backgrounColor = isNightMode ?
+    int backgroundColor = isNightMode ?
         getResources().getColor(R.color.colorNightModeBackground) :
         getResources().getColor(R.color.transparent);
     int textColor = isNightMode ?
         getResources().getColor(R.color.colorNightModeText) :
         getResources().getColor(R.color.colorNightModeBackground);
 
-    setBackgroundColor(backgrounColor);
+    setBackgroundColor(backgroundColor);
     TextView textViewRequestFrom = (TextView) findViewById(R.id.text_view_request_from);
     textViewRequestFrom.setTextColor(textColor);
     TextView textViewRequestSummary = (TextView) findViewById(R.id.text_view_request_summary);
