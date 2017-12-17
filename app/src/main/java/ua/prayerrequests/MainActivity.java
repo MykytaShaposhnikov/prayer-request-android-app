@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
               public void onDismiss(View view, int position) {
                 settings.removePrayerRequest(position);
                 final PrayerRequest deletedRequest;
-                deletedRequest=requests.get(position);
+                deletedRequest = requests.get(position);
                 loadPrayerRequestData();
                 createListView();
                 Snackbar snackbar = Snackbar
@@ -186,9 +186,18 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("UNDO", new View.OnClickListener() {
                       @Override
                       public void onClick(View view) {
-                       requests.add(deletedRequest);
+                        requests.add(deletedRequest);
                         settings.savePrayerRequests(requests);
                         listAdapter.notifyDataSetChanged();
+//                        Comparator<PrayerRequest> comparator = null;
+//                        comparator = new Comparator<PrayerRequest>() {
+//                          @Override
+//                          public int compare(PrayerRequest left, PrayerRequest right) {
+//                            return left.getRequester().compareToIgnoreCase(
+//                                right.getRequester());
+//                          }
+//                        };
+//                          Collections.sort(requests,comparator);
                         Snackbar snackbar1 = Snackbar.make(findViewById(R.id.coordinator_layout), "Request restored!", Snackbar.LENGTH_SHORT);
                         snackbar1.show();
                       }
