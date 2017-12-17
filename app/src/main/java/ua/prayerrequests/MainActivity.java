@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                 .setTitle(R.string.title_sort_by)
                 .setIcon(android.R.drawable.ic_menu_sort_by_size)
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_sort, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int id) {
                     if (((RadioButton) dialogContent.
                         findViewById(R.id.radio_button_sorting_by_requester)).isChecked()) {

@@ -1,17 +1,19 @@
 <resources>
 
     <string name="app_name">Prayer Requests</string>
-    <string name="text_enter_request">Request details:</string>
+    <string name="text_enter_request">Request details</string>
     <string name="message_alert">Would you like to delete the following prayer request:\n
         %2$s\n?\n\n(Note: this is one of %1$d existing requests)
     </string>
     <string name="button_no">No</string>
     <string name="button_yes">Yes</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
+    <string name="button_sort">Sort</string>
+    <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
-    <string name="text_requester">Requester:</string>
-    <string name="text_request_summary">Request summary:</string>
-    <string name="text_date">Date of request: %s</string>
+    <string name="text_requester">Requester</string>
+    <string name="text_request_summary">Request summary</string>
+    <string name="text_date">Date of request %s</string>
     <string name="text_less"><u>less</u></string>
     <string name="text_more"><u>more</u></string>
     <string name="button_back">Prayer request:</string>

@@ -142,7 +142,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
       AlertDialog dialogSavePrayerRequest =
           new AlertDialog.Builder(this)
               .setTitle(R.string.title_prayer_request)
-              .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+              .setPositiveButton(R.string.button_save, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                   saveAndFinish();
                 }
