@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

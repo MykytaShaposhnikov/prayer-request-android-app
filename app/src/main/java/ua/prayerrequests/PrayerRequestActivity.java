@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +17,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import static com.example.android.prosbi.MainActivity.KEY_PRAYER_REQUEST;
-
 public class PrayerRequestActivity extends AppCompatActivity {
   private PrayerRequest initialPrayerRequest;
   private PrayerRequest prayerRequest;
@@ -32,7 +30,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_prayer_request);
-    prayerRequest = new Gson().fromJson(getIntent().getStringExtra(KEY_PRAYER_REQUEST),
+    prayerRequest = new Gson().fromJson(getIntent().getStringExtra(MainActivity.KEY_PRAYER_REQUEST),
         PrayerRequest.class);
     initialPrayerRequest = new PrayerRequest(prayerRequest);
     configureRequester();
@@ -82,7 +80,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
 
   private void configureDate() {
     calendar = (MaterialCalendarView) findViewById(R.id.calendar);
-    calendar.setDateSelected(prayerRequest.getRequestDate(),true);
+    calendar.setDateSelected(prayerRequest.getRequestDate(), true);
     calendar.setCurrentDate(prayerRequest.getRequestDate());
     calendar.setOnDateChangedListener(
         new OnDateSelectedListener() {
@@ -131,7 +129,7 @@ public class PrayerRequestActivity extends AppCompatActivity {
   private void saveAndFinish() {
     Intent result = new Intent();
     collectFromFields();
-    result.putExtra(KEY_PRAYER_REQUEST, new Gson().toJson(prayerRequest));
+    result.putExtra(MainActivity.KEY_PRAYER_REQUEST, new Gson().toJson(prayerRequest));
     setResult(RESULT_OK, result);
     super.onBackPressed();
   }

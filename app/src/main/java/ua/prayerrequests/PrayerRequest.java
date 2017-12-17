@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import java.io.Serializable;
 import java.util.Date;

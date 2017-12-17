@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_requests);
     recyclerView.setLayoutManager(mLayoutManager);
-   listAdapter =  new CustomRecycleAdapter(requests, this,
+    listAdapter = new CustomRecycleAdapter(requests, this,
         new CustomRecycleAdapter.OnRecyclerItemClickListener() {
           @Override
           public void onItemClick(int position) {

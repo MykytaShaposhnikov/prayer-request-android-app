@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -45,6 +45,7 @@ public class CustomRecycleAdapter extends RecyclerView.Adapter<CustomRecycleAdap
 
   public interface OnRecyclerItemClickListener {
     void onItemClick(int position);
+
     void onItemLongClick(int position);
   }
 

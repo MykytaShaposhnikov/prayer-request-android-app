@@ -1,4 +1,4 @@
-package com.example.android.prosbi;
+package ua.prayerrequests;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
