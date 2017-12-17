@@ -8,13 +8,30 @@ android {
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        debug {
+            storeFile file("PrayerRequests.jks")
+            storePassword "2ktAUT"
+            keyAlias "nik.sha.dev"
+            keyPassword "CZu2ca"
+        }
+        release {
+            storeFile file("PrayerRequests.jks")
+            storePassword "2ktAUT"
+            keyAlias "nik.sha.dev"
+            keyPassword "CZu2ca"
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
