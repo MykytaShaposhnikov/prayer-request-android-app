@@ -19,6 +19,8 @@ class Settings {
   private static final String FILE_NAME_DELETED_PRAYER_REQUESTS = "deleted_prayer_requests.json";
   private Context context;
   private Gson gson;
+  boolean isCheked;
+
 
   Settings(Context context) {
     this.context = context;

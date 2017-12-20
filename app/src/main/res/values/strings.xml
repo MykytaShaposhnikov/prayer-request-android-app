@@ -2,9 +2,6 @@
 
     <string name="app_name">Prayer Requests</string>
     <string name="text_enter_request">Request details</string>
-    <string name="message_alert">Would you like to delete the following prayer request:\n
-        %2$s\n?\n\n(Note: this is one of %1$d existing requests)
-    </string>
     <string name="button_no">No</string>
     <string name="button_yes">Yes</string>
     <string name="button_ok">OK</string>

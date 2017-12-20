@@ -7,26 +7,33 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-  public class CustomViewPagerAdapter extends PagerAdapter {
-    private List<PrayerRequest> requests;
-    private Context context;
-    private boolean isNightMode = false;
+public class CustomViewPagerAdapter extends PagerAdapter {
+  private List<PrayerRequest> requests;
+  private Context context;
+  private boolean isNightMode = false;
+  private boolean isChecked;
 
-    public CustomViewPagerAdapter(Context context, List<PrayerRequest> requests) {
-      this.requests = requests;
-      this.context = context;
-    }
+  public CustomViewPagerAdapter(Context context, List<PrayerRequest> requests) {
+    this.requests = requests;
+    this.context = context;
+  }
 
-    public void setNightMode(boolean nightMode) {
-      isNightMode = nightMode;
-      notifyDataSetChanged();
+  public void setNightMode(boolean nightMode) {
+    isNightMode = nightMode;
+    notifyDataSetChanged();
+  }
 
-    }
+  public void setFiltration(boolean checked) {
+    isChecked = checked;
+    if (isChecked=false)
 
-    @Override
-    public int getCount() {
-      return requests.size();
-    }
+    notifyDataSetChanged();
+  }
+
+  @Override
+  public int getCount() {
+    return requests.size();
+  }
 
   @Override
   public boolean isViewFromObject(View view, Object object) {
@@ -39,6 +46,8 @@ import java.util.List;
     PrayerRequestView view = new PrayerRequestView(context, request.getRequester(),
         request.getRequestSummary(), request.getRequestDetails());
     view.setNightMode(isNightMode);
+    setFiltration(isChecked);
+    view.changingLessToMore();
     container.addView(view);
     return view;
   }
@@ -48,8 +57,8 @@ import java.util.List;
     container.removeView((View) object);
   }
 
-    @Override
-    public int getItemPosition(Object object) {
-      return POSITION_NONE;
-    }
+  @Override
+  public int getItemPosition(Object object) {
+    return POSITION_NONE;
   }
+}

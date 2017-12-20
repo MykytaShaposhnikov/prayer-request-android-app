@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Молитвенные Просьбы</string>
+    <string name="button_back">Молитвенная просьба:</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_no">Нет</string>
+    <string name="button_ok">Да</string>
+    <string name="button_save">Сохранить</string>
+    <string name="button_sort">Сортировать</string>
+    <string name="button_yes">Да</string>
+    <string name="filtration_by_favorites">Фильтрация</string>
+    <string name="item_prayer_mode">Режим молитвы</string>
+    <string name="item_save">Сохранить</string>
+    <string name="item_sorting">Сортировать</string>
+    <string name="prayer_mode_activity_name">Режим Молитвы</string>
+    <string name="radio_button_sorting_by_date_ascending">по возврастанию даты</string>
+    <string name="radio_button_sorting_by_date_descending">по убыванию даты</string>
+    <string name="radio_button_sorting_by_favorites">по избранным</string>
+    <string name="text_less"><u>меньше</u></string>
+    <string name="text_more"><u>больше</u></string>
+    <string name="text_request_summary">Краткое описание</string>
+    <string name="title_prayer_request">Хотите ли вы сохранить эту просьбу?</string>
+    <string name="title_sort_by">Сортировка по</string>
+    <string name="text_enter_request">Полное описание</string>
+    <string name="text_date">Дата просьбы</string>
+    <string name="text_requester">От кого</string>
+    <string name="radio_button_sorting_by_requester">по имени просящего</string>
+</resources>

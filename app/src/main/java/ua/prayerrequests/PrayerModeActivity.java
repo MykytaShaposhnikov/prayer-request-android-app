@@ -49,6 +49,9 @@ public class PrayerModeActivity extends AppCompatActivity {
         isNightMode = !isNightMode;
         adapter.setNightMode(isNightMode);
         break;
+      case R.id.item_filtration_by_favourites:
+
+        break;
     }
 
     return true;

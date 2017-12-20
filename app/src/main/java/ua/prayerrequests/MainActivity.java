@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 
 import com.google.gson.Gson;
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
   private static final int ACTIVITY_PRAYER_REQUEST = 1;
   private static final String KEY_REQUEST_DETAILS = "details";
   private List<PrayerRequest> requests;
-  private List<PrayerRequest> deletedRequests;
   private CustomRecycleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
+  CheckBox checkBoxStar = (CheckBox) findViewById(R.id.checkBoxStar);
+  boolean isChecked = false;
 
   public static String requestDateString(Date requestDate) {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             startPrayerRequestActivity(new PrayerRequest("", new Date(), "", ""));
           }
         });
-
   }
 
   @Override
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     getMenuInflater().inflate(R.menu.main, menu);
     return super.onCreateOptionsMenu(menu);
   }
-
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -119,6 +119,20 @@ public class MainActivity extends AppCompatActivity {
     return true;
   }
 
+  public void filtration() {
+      if (checkBoxStar.isChecked())
+        isChecked = true;
+
+    //Button filtrationByFavourites = (Button) findViewById(R.id.item_filtration_by_favourites);
+//    filtrationByFavourites.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        if (checkBoxStar.isChecked())
+//          isChecked = true;
+//        adapter.setFiltration(isChecked);
+//      }
+//    });
+  }
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == Activity.RESULT_OK) {
@@ -186,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("UNDO", new View.OnClickListener() {
                       @Override
                       public void onClick(View view) {
-                        requests.add(position,deletedRequest);
+                        requests.add(position, deletedRequest);
                         settings.savePrayerRequests(requests);
                         listAdapter.notifyDataSetChanged();
                         Snackbar snackbar1 = Snackbar.make(findViewById(R.id.coordinator_layout), "Request restored!", Snackbar.LENGTH_SHORT);

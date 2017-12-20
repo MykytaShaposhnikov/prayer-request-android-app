@@ -9,4 +9,10 @@
         android:icon="@drawable/moon"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/item_filtration_by_favourites"
+        android:title="@string/item_save"
+        android:icon="@drawable/star"
+        app:showAsAction="always"/>
+
 </menu>
