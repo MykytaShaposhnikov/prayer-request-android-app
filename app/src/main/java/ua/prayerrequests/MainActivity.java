@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.RadioButton;
 
 import com.google.gson.Gson;
@@ -35,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
   private CustomRecycleAdapter listAdapter;
   private SortingType sortingType = SortingType.BY_REQUESTER;
   private Settings settings;
-  CheckBox checkBoxStar = (CheckBox) findViewById(R.id.checkBoxStar);
-  boolean isChecked = false;
 
   public static String requestDateString(Date requestDate) {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
@@ -119,20 +116,6 @@ public class MainActivity extends AppCompatActivity {
     return true;
   }
 
-  public void filtration() {
-      if (checkBoxStar.isChecked())
-        isChecked = true;
-
-    //Button filtrationByFavourites = (Button) findViewById(R.id.item_filtration_by_favourites);
-//    filtrationByFavourites.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        if (checkBoxStar.isChecked())
-//          isChecked = true;
-//        adapter.setFiltration(isChecked);
-//      }
-//    });
-  }
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == Activity.RESULT_OK) {
@@ -221,6 +204,22 @@ public class MainActivity extends AppCompatActivity {
 
     recyclerView.setOnTouchListener(listener);
   }
+
+//  private void onCheckBoxClick() {
+//CheckBox checkBoxStar;
+//    checkBoxStar= (CheckBox) findViewById(R.id.checkBoxStar);
+//     final PrayerRequest checkedRequest;
+//     final PrayerRequest notCheckedRequest;
+//    checkBoxStar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//      @Override
+//      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//        if(isChecked)
+//         checkedRequest= requests.get(position);
+//        else
+//          notCheckedRequest=requests.get(position);
+//        }
+//      });
+//    }
 
   private void startPrayerRequestActivity(PrayerRequest prayerRequest) {
     String serialaized = new Gson().toJson(prayerRequest);
