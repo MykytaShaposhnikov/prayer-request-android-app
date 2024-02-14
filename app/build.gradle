@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "ua.prayerrequests"
         minSdkVersion 17
-        targetSdkVersion 31
-        versionCode 2
+        targetSdkVersion 33
+        versionCode 10
         versionName "0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner" // Updated for AndroidX
     }
